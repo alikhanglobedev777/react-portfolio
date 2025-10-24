@@ -1,0 +1,142 @@
+/* =========================
+   PROJECTS SECTION
+========================= */
+.projects-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+/* Grid Layout */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* =========================
+   PROJECT CARD
+========================= */
+.project-card {
+  background: #1a102d;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  padding: 22px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 320px; /* Base consistent height */
+  height: auto; /* Allows expansion */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+}
+
+/* Project Thumbnail - Small Logo */
+.project-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #2d1b4e;
+  padding: 5px;
+  border: 2px solid #a855f7;
+  margin-bottom: 12px;
+}
+
+/* Project Title */
+.project-card h3 {
+  color: #c084fc;
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Description */
+.project-card p {
+  color: #ccc;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-align: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+   /* max-height: 90px; */
+  text-overflow: ellipsis;
+}
+
+/* Read More Button */
+.read-more-btn {
+  background: transparent;
+  border: none;
+  color: #a855f7;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-decoration: underline;
+}
+
+.read-more-btn:hover {
+  color: #c084fc;
+}
+
+/* Live Demo Button */
+.btn-demo {
+  display: inline-block;
+  background: #a855f7;
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 22px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: auto; /* ✅ Push to bottom */
+  transition: background 0.3s ease;
+}
+
+.btn-demo:hover {
+  background: #9333ea;
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+  .project-card {
+    height: 400px;
+  }
+  .project-img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .section-title {
+    font-size: 1.5rem;
+  }
+  .project-card {
+    height: auto; /* mobile more flexible */
+    padding: 18px;
+  }
+  .project-card p {
+    max-height: none;
+  }
+}

@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top right, #1a1033, #0b0015);
+  color: white;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+::-webkit-scrollbar {
+  width: 0px; 
+  background: transparent;
+}
+
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #a855f7;
+  border-radius: 10px;
+}
+/* Prevent horizontal scrolling completely */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
