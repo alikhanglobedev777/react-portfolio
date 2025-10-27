@@ -37,7 +37,7 @@ const Contact = () => {
       // Send auto-reply email (errors here won't affect main toast)
       emailjs.send(
         "service_blzdbfc",
-        "template_2v2zn7h",
+        "template_auto",
         formData,
         "lJmNzPr9gaszJ_mfC"
       ).catch((err) => console.log("Auto-reply failed:", err));
