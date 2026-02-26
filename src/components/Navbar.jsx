@@ -86,7 +86,7 @@ function Navbar() {
 
       {/* Right Social Icons */}
       <div className="social-icons">
-        <a href="https://www.linkedin.com/in/ali-khan-06197836b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/in/ali-khan-mern/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
           <FaLinkedinIn />
         </a>
         <a href="https://github.com/alikhanglobedev777" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
