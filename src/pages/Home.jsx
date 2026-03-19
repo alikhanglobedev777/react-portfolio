@@ -29,6 +29,7 @@ export default function Home() {
     setTimeout(scrollToSection, 60);
   }, [location]);
 
+<<<<<<< HEAD
   useEffect(() => {
     const sections = document.querySelectorAll("section");
     const observer = new IntersectionObserver(
@@ -51,6 +52,12 @@ export default function Home() {
     <>
    
       <section id="home" className="home reveal">
+=======
+  return (
+    <>
+   
+      <section id="home" className="home">
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
         <div className="hero-top">
       
           <div className="badge">
@@ -131,6 +138,7 @@ export default function Home() {
       </section>
 
    
+<<<<<<< HEAD
       <section id="about" className="reveal">
         <About />
       </section>
@@ -144,6 +152,21 @@ export default function Home() {
       </section>
 
       <section id="contact" className="reveal">
+=======
+      <section id="about">
+        <About />
+      </section>
+
+      <section id="blogs">
+        <Blogs />
+      </section>
+
+      <section id="projects">
+        <Projects/>
+      </section>
+
+      <section id="contact">
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
         <Contact />
       </section>
     </>
