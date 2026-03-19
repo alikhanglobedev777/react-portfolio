@@ -121,14 +121,12 @@ export default function Home() {
         <About />
       </section>
 
-      <section id="blogs" className="fade-in">
-        <Blogs />
-      </section>
-
       <section id="projects" className="fade-in">
         <Projects />
       </section>
-
+      <section id="blogs" className="fade-in">
+        <Blogs />
+      </section>
       <section id="contact" className="fade-in">
         <Contact />
       </section>
