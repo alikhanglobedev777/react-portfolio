@@ -10,6 +10,7 @@ html {
   scroll-behavior: smooth;
 }
 
+<<<<<<< HEAD
 /* Smooth touch interactions + remove mobile tap highlight */
 button,
 a,
@@ -29,6 +30,8 @@ a:focus-visible {
 ::selection {
   background: rgba(168, 85, 247, 0.4);
 }
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
 
 ::-webkit-scrollbar {
   width: 0px; 
@@ -52,6 +55,7 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
+<<<<<<< HEAD
 
 /* Smooth section reveal */
 section.reveal {
@@ -64,3 +68,5 @@ section.reveal.reveal-visible {
   opacity: 1;
   transform: translateY(0);
 }
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7

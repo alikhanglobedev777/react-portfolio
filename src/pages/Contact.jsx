@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "../styles/Contact.css";
 import profile from "../assets/profile.jpeg";
+<<<<<<< HEAD
 import emailjs from "@emailjs/browser";
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,12 +23,17 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+<<<<<<< HEAD
   // Send email function
+=======
+  // Send email function using serverless Nodemailer API
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
   const sendEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       // Send main email
       await emailjs.send(
         "service_blzdbfc",
@@ -57,6 +65,33 @@ const Contact = () => {
       setTimeout(() => setIsOpen(false), 2000);
     } catch (err) {
       console.log("Main email failed:", err);
+=======
+      const response = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("✅ Message Sent Successfully!");
+
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: ""
+        });
+
+        setTimeout(() => setIsOpen(false), 2000);
+      } else {
+        toast.error("❌ Failed to send message. Try again.");
+        console.log(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
       toast.error("❌ Failed to send message. Try again.");
     } finally {
       setLoading(false);
@@ -74,6 +109,7 @@ const Contact = () => {
           Let’s work together to bring your vision to life.
         </p>
 
+<<<<<<< HEAD
         <div className="contact-info">
           <div>
             <strong>Location:</strong> Lahore, Pakistan
@@ -88,6 +124,8 @@ const Contact = () => {
           </div>
         </div>
 
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
         <button className="contact-btn" onClick={() => setIsOpen(true)}>
           Hire Me
         </button>
