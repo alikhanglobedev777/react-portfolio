@@ -9,6 +9,13 @@
   color: #fff;
 }
 
+.projects-count {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-top: -8px;
+  margin-bottom: 24px;
+}
+
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
@@ -22,6 +29,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
+  justify-items: center;
 }
 
 /* =========================
@@ -105,6 +113,25 @@
   font-weight: 600;
   margin-top: auto; /* ✅ Push to bottom */
   transition: background 0.3s ease;
+}
+
+.btn-demo--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon--right {
+  margin-left: 4px;
 }
 
 .btn-demo:hover {

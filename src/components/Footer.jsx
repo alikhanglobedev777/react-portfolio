@@ -41,10 +41,38 @@ export default function Footer() {
 
         {/* Socials */}
         <div className="footer-socials">
-          <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
-          <a href="#" aria-label="GitHub"><FaGithub /></a>
-          <a href="#" aria-label="Twitter"><FaTwitter /></a>
-          <a href="#" aria-label="WhatsApp"><FaWhatsapp /></a>
+          <a
+            href="https://www.linkedin.com/in/ali-khan-mern/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <FaLinkedinIn />
+          </a>
+          <a
+            href="https://github.com/alikhanglobedev777"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <FaGithub />
+          </a>
+          <a
+            href="https://x.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter"
+          >
+            <FaTwitter />
+          </a>
+          <a
+            href="https://wa.me/923021848264"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp"
+          >
+            <FaWhatsapp />
+          </a>
         </div>
       </div>
 

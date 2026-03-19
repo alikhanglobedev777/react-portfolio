@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaLinkedinIn,
   FaGithub,
@@ -8,29 +8,37 @@ import {
 } from "react-icons/fa";
 import "../styles/Navbar.css";
 
-function Navbar() {
+function Navbar({ activeSection = "home" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavClick = (e, path, sectionId) => {
     e.preventDefault();
-    navigate(path);
     setMenuOpen(false); // close mobile menu after click
 
-    // small delay to ensure route/DOM updated before scrolling
-    setTimeout(() => {
-      const nav = document.querySelector(".navbar");
-      const navHeight = nav ? nav.offsetHeight : 70;
-      const el = document.getElementById(sectionId);
-      if (el) {
-        const top =
-          el.getBoundingClientRect().top + window.pageYOffset - navHeight - 8;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    }, 60);
+    // Navigate to the path
+    navigate(path);
+
+    // Scroll to section ID if provided (with a small delay for DOM to update)
+    if (sectionId) {
+      setTimeout(() => {
+        const nav = document.querySelector(".navbar");
+        const navHeight = nav ? nav.offsetHeight : 70;
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top =
+            el.getBoundingClientRect().top + window.pageYOffset - navHeight - 8;
+          window.scrollTo({ top, behavior: "smooth" });
+        }
+      }, 60);
+    }
   };
 
-  const linkClass = ({ isActive }) => (isActive ? "nav-link active" : "nav-link");
+  // Determine active link based on current active section (from IntersectionObserver)
+  const getActiveLinkClass = (sectionId) => {
+    return sectionId === activeSection ? "nav-link active" : "nav-link";
+  };
 
   return (
     <nav className="navbar">
@@ -54,34 +62,52 @@ function Navbar() {
       {/* Center Links (desktop) */}
       <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
         <li>
-          <NavLink to="/" end className={linkClass} onClick={(e) => handleNavClick(e, "/", "home")}>
+          <a href="#home" className={getActiveLinkClass("home")} onClick={(e) => handleNavClick(e, "/", "home")}>
             Home
-          </NavLink>
+          </a>
+        </li>
+          <li>
+          <a
+            href="#resume"
+            className={getActiveLinkClass("resume")}
+            onClick={(e) => handleNavClick(e, "/resume", "resume")}
+          >
+            Resume
+          </a>
         </li>
 
         <li>
-          <NavLink to="/about" className={linkClass} onClick={(e) => handleNavClick(e, "/about", "about")}>
+          <a href="#about" className={getActiveLinkClass("about")} onClick={(e) => handleNavClick(e, "/about", "about")}>
             About
-          </NavLink>
+          </a>
         </li>
 
         <li>
-          <NavLink to="/blogs" className={linkClass} onClick={(e) => handleNavClick(e, "/blogs", "blogs")}>
-            Blogs
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink to="/projects" className={linkClass} onClick={(e) => handleNavClick(e, "/projects", "projects")}>
+          <a
+            href="#projects"
+            className={getActiveLinkClass("projects")}
+            onClick={(e) => handleNavClick(e, "/projects", "projects")}
+          >
             Projects
-          </NavLink>
+          </a>
         </li>
 
         <li>
-          <NavLink to="/contact" className={linkClass} onClick={(e) => handleNavClick(e, "/contact", "contact")}>
-            Contact
-          </NavLink>
+          <a href="#blogs" className={getActiveLinkClass("blogs")} onClick={(e) => handleNavClick(e, "/blogs", "blogs")}>
+            Blogs
+          </a>
         </li>
+
+        <li>
+          <a
+            href="#contact"
+            className={getActiveLinkClass("contact")}
+            onClick={(e) => handleNavClick(e, "/contact", "contact")}
+          >
+            Contact
+          </a>
+        </li>
+      
       </ul>
 
       {/* Right Social Icons */}

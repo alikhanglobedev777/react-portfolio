@@ -6,12 +6,13 @@ import About from "./About";
 import Blogs from "./Blogs";
 import Contact from "./Contact";
 import Projects from "./Projects";
+import Resume from "./Resume";
 
 export default function Home() {
   const location = useLocation();
 
   useEffect(() => {
-  
+
     const scrollToSection = () => {
       let sectionId =
         location.pathname === "/" ? "home" : location.pathname.replace("/", "");
@@ -25,30 +26,30 @@ export default function Home() {
         window.scrollTo({ top, behavior: "smooth" });
       }
     };
-  
+
     setTimeout(scrollToSection, 60);
   }, [location]);
 
   return (
     <>
-   
-      <section id="home" className="home">
+
+      <section id="home" className="home fade-in">
         <div className="hero-top">
-      
+
           <div className="badge">
             <span className="dot" /> Available for Freelance
           </div>
 
-        
+
           <h1 className="hero-title">
             I AM <br />
             <span>Ali Khan</span>
           </h1>
         </div>
 
-      
+
         <div className="home-grid">
-        
+
           <div className="clients-box">
             <h3>
               Happy Clients <span className="symbol">♦</span> Fiverr{" "}
@@ -81,7 +82,7 @@ export default function Home() {
             </div>
           </div>
 
-         
+
           <div className="profile-column">
             <div className="profile-oval">
               <img src={profile} alt="Ali Khan" />
@@ -112,20 +113,23 @@ export default function Home() {
         </div>
       </section>
 
-   
-      <section id="about">
+      <section id="resume" className="fade-in">
+        <Resume variant="embedded" />
+      </section>
+
+      <section id="about" className="fade-in">
         <About />
       </section>
 
-      <section id="blogs">
+      <section id="blogs" className="fade-in">
         <Blogs />
       </section>
 
-      <section id="projects">
-        <Projects/>
+      <section id="projects" className="fade-in">
+        <Projects />
       </section>
 
-      <section id="contact">
+      <section id="contact" className="fade-in">
         <Contact />
       </section>
     </>
