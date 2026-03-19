@@ -10,6 +10,27 @@ html {
   scroll-behavior: smooth;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .page-transition,
+  .fade-in,
+  .fade-in.visible {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 
 ::-webkit-scrollbar {
   width: 0px; 
@@ -32,4 +53,36 @@ html, body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+}
+
+/* Page transition animations */
+.page-transition {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: pageFadeIn 0.45s ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section reveal animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(14px);
+  will-change: opacity, transform;
+}
+
+.fade-in.visible {
+  animation: fadeIn 0.55s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
