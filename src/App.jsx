@@ -13,8 +13,9 @@ function AppContent() {
     const elements = document.querySelectorAll(".fade-in");
     if (!elements.length) return;
 
+    elements.forEach((el) => el.classList.add("visible"));
+
     if (!window.IntersectionObserver) {
-      elements.forEach((el) => el.classList.add("visible"));
       return;
     }
 

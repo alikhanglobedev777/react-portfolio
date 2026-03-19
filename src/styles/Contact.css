@@ -1,10 +1,9 @@
 /* ================= CONTACT SECTION ================= */
 .contact-container {
   width: 100%;
-  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -243,7 +242,7 @@
 }
 
 @media (max-width: 576px) {
-  .contact-container { padding: 15px; min-height: auto; }
+  .contact-container { padding: 15px; }
   .contact-card { padding: 30px 15px; }
   .contact-title { font-size: 18px; }
   .contact-sub { font-size: 12px; }
