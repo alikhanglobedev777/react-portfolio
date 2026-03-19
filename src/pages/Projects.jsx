@@ -15,7 +15,7 @@ function Projects() {
       title: "AAA Service Directory",
       description:
         "AAA is a MERN stack service marketplace where clients can find and connect with local service providers. I implemented JWT-based authentication, role-based login/signup, and RESTful APIs for secure user and business management. Service providers can manage their profiles, and clients can explore services with a clean, responsive UI",
-      image: "https://aaa-7zb1.vercel.app/favicon_transbg.png",
+      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
       liveDemo: "https://aaa-7zb1.vercel.app/home",
       icon: <FaBriefcase />,
       category: "Full-Stack",
