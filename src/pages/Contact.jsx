@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import "../styles/Contact.css";
-import profile from "../assets/profile.jpeg";
-import emailjs from "@emailjs/browser";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import profile from "../assets/profile.jpeg";
+import "../styles/Contact.css";
 
 const Contact = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,63 +17,47 @@ const Contact = () => {
   React.useEffect(() => {
     if (!isOpen) return;
 
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") setIsOpen(false);
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
     };
 
     document.addEventListener("keydown", onKeyDown);
-    const prevOverflow = document.body.style.overflow;
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  // Send email function
-  const sendEmail = async (e) => {
-    e.preventDefault();
+  const sendEmail = async (event) => {
+    event.preventDefault();
     setLoading(true);
 
     try {
-      // Send main email
-      await emailjs.send(
-        "service_blzdbfc",
-        "template_nac9ebv",
-        formData,
-        "lJmNzPr9gaszJ_mfC"
+      const subject = encodeURIComponent(formData.subject);
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
       );
 
-      // Send auto-reply email (errors here won't affect main toast)
-      emailjs.send(
-        "service_blzdbfc",
-        "template_auto",
-        formData,
-        "lJmNzPr9gaszJ_mfC"
-      ).catch((err) => console.log("Auto-reply failed:", err));
-
-      // Success toast
-      toast.success("✅ Message Sent Successfully!");
-
-      // Reset form
+      window.location.href = `mailto:ak.alikhan.5911@gmail.com?subject=${subject}&body=${body}`;
+      toast.success("Message draft opened in your email app.");
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: ""
       });
-
-      // Close modal after 2 seconds
-      setTimeout(() => setIsOpen(false), 2000);
-    } catch (err) {
-      console.log("Main email failed:", err);
-      toast.error("❌ Failed to send message. Try again.");
+      setIsOpen(false);
+    } catch (error) {
+      console.log("Mail action failed:", error);
+      toast.error("Failed to open your email app. Try again.");
     } finally {
       setLoading(false);
     }
@@ -88,13 +71,18 @@ const Contact = () => {
         <img src={profile} alt="profile" className="contact-avatar" />
         <h2 className="contact-title">If you have any project in mind</h2>
         <p className="contact-sub">
-          Let’s work together to bring your vision to life.
+          Let&apos;s work together to bring your vision to life.
         </p>
 
         <div className="contact-quicklinks">
           <a className="contact-link" href="mailto:ak.alikhan.5911@gmail.com">Email</a>
           <a className="contact-link" href="tel:+923021848264">Call</a>
-          <a className="contact-link" href="https://wa.me/923021848264" target="_blank" rel="noopener noreferrer">
+          <a
+            className="contact-link"
+            href="https://wa.me/923021848264"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             WhatsApp
           </a>
         </div>
@@ -112,12 +100,12 @@ const Contact = () => {
         >
           <div
             className="modal"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="contact-modal-title"
           >
-            <h3 className="modal-title" id="contact-modal-title">Let’s Work Together</h3>
+            <h3 className="modal-title" id="contact-modal-title">Let&apos;s Work Together</h3>
 
             <form className="contact-form" onSubmit={sendEmail}>
               <div className="field">
@@ -175,12 +163,12 @@ const Contact = () => {
               </div>
 
               <button type="submit" className="submit-btn" disabled={loading}>
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? "Opening..." : "Send Message"}
               </button>
             </form>
 
             <button className="close-btn" onClick={() => setIsOpen(false)}>
-              ✖
+              x
             </button>
           </div>
         </div>
