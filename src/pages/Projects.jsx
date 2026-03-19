@@ -26,7 +26,7 @@ function Projects() {
       description:
         "A modern and fully responsive portfolio website built using React and Vite, showcasing my skills, projects, and experience as a MERN Stack Developer. It includes smooth navigation, reusable components, and dynamic routing with react-router-dom. The design features a clean UI, interactive animations, and optimized performance for a seamless user experience. Integrated real project links, social media icons, and contact section for easy communication",
       image: "https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png",
-      liveDemo: "https://react-portfolio-omega-sable-30.vercel.app/",
+      liveDemo: null,
       icon: <FaCode />,
       category: "Frontend",
     },
@@ -66,7 +66,7 @@ function Projects() {
       description:
         "AI-powered contract management platform with document workflows, backend services, and modern frontend UI.",
       image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: "https://react-portfolio-omega-sable-30.vercel.app/",
+      liveDemo: null,
       icon: <FaBriefcase />,
       category: "Full-Stack",
     },
@@ -144,12 +144,18 @@ function Projects() {
               </button>
 
               <a
-                href={project.liveDemo}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={project.liveDemo || "#"}
+                target={project.liveDemo ? "_blank" : undefined}
+                rel={project.liveDemo ? "noopener noreferrer" : undefined}
                 className="btn-demo"
+                aria-disabled={!project.liveDemo}
+                onClick={(event) => {
+                  if (!project.liveDemo) {
+                    event.preventDefault();
+                  }
+                }}
               >
-                Live Demo
+                {project.liveDemo ? "Live Demo" : "Demo Soon"}
               </a>
             </div>
           );

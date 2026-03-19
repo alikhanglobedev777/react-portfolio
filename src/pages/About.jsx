@@ -18,7 +18,7 @@ export default function About() {
       title: "VTEO AI (Contract Management System)",
       description:
         "AI-powered contract management platform with document workflows, backend services, and modern frontend UI.",
-      link: "https://react-portfolio-omega-sable-30.vercel.app/", // placeholder demo link
+      link: null,
     },
     {
       title: "JWT Authentication System",
@@ -149,13 +149,19 @@ export default function About() {
             <h4>{project.title}</h4>
             <p>{project.description}</p>
             <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={project.link || "#"}
+              target={project.link ? "_blank" : undefined}
+              rel={project.link ? "noopener noreferrer" : undefined}
               className="btn-demo btn-demo--icon"
+              aria-disabled={!project.link}
+              onClick={(event) => {
+                if (!project.link) {
+                  event.preventDefault();
+                }
+              }}
             >
               <FaHeart className="btn-icon" />
-              Live Demo
+              {project.link ? "Live Demo" : "Demo Soon"}
               <FaExternalLinkAlt className="btn-icon btn-icon--right" />
             </a>
           </div>
