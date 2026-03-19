@@ -1,0 +1,177 @@
+.home {
+    text-align: center;
+    padding-top: 120px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.hero-top .badge {
+    display: inline-flex;
+    align-items: center;
+    background: #2a153f;
+    padding: 10px 25px;
+    border-radius: 30px;
+    margin-bottom: 25px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #e5d9ff;
+}
+
+.hero-top .dot {
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.hero-title {
+    font-size: 79px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #c084fc;
+    margin: 0;
+}
+
+.hero-title span {
+    font-size: 80px;
+    font-weight: 900;
+    color: #a855f7;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.clients-box {
+    background: transparent;
+    padding: 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #ddd;
+    max-width: 310px;
+    /* margin: 100px auto; */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    border: 1px solid #a855f7;
+}
+
+.clients-box h3 {
+    margin: 0 0 12px 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: #a855f7;
+    margin: 12px 0;
+}
+
+.client-pics {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    margin-left: 55px;
+}
+
+.client-pics img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #a855f7;
+}
+
+.reviews {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.symbol {
+    color: #a855f7;
+}
+
+.profile-column {
+    position: relative;
+    text-align: center;
+}
+
+.profile-oval img {
+    width: 300px;
+    height: 460px;
+    border-radius: 50rem;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.pill {
+    position: absolute;
+    background: transparent;
+    color: #fff;
+    padding: 8px 18px;
+    border: 1px solid #fff;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.pill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, #a454f3 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+    z-index: -1;
+    border-radius: inherit;
+}
+
+.pill:hover::before {
+    transform: scale(6);
+    opacity: 1;
+}
+
+.pill-frontend {
+    top: 10%;
+    left: -140px;
+}
+
+.pill-uiux {
+    bottom: 15%;
+    right: -140px;
+}
+
+.stats-column {
+    text-align: left;
+    margin-left: 58px;
+    max-width: 220px;
+}
+
+.stat {
+    margin-bottom: 20px;
+}
+
+.stat-num {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #f1f1f1;
+}

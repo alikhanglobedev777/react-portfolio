@@ -1,0 +1,275 @@
+/* =========================
+   BLOGS SECTION
+========================= */
+.blogs {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+}
+
+.blogs-header {
+  margin-bottom: 40px;
+}
+
+.badge {
+  display: inline-block;
+  background: #2d1b4e;
+  color: #c084fc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.blogs-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+.blogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.blog-card {
+  background: #1a102d;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: left;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(192, 132, 252, 0.3);
+}
+
+.blog-card h3 {
+  color: #c084fc;
+  margin-bottom: 10px;
+}
+
+.stars {
+  color: #a855f7;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.blog-text {
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #a855f7;
+}
+
+.blog-author h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.blog-author span {
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+/* =========================
+   FAQ SECTION
+========================= */
+.faq-section {
+  margin-top: 5rem;
+  padding: 2rem 20px;
+  text-align: center;
+}
+
+.faq-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: transparent;
+  border: 1px solid rgba(128, 90, 213, 0.5);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(128, 90, 213, 0.1);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.faq-toggle {
+  font-size: 1.5rem;
+  color: #a78bfa;
+  font-weight: bold;
+}
+
+.faq-answer {
+  margin-top: 0.8rem;
+  color: #d1d5db;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.faq-item.open {
+  border-color: #a78bfa;
+  background: rgba(128, 90, 213, 0.15);
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .blogs-title {
+    font-size: 1.9rem;
+  }
+
+  .blogs-grid {
+    gap: 20px;
+  }
+
+  .blog-card {
+    padding: 20px;
+  }
+
+  .faq-title {
+    font-size: 1.7rem;
+  }
+
+  .faq-item {
+    padding: 0.9rem 1.2rem;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) {
+  .blogs-title {
+    font-size: 1.7rem;
+  }
+
+  .blog-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .blog-text {
+    font-size: 0.9rem;
+  }
+
+  .author-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .faq-title {
+    font-size: 1.5rem;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+  }
+
+  .faq-toggle {
+    font-size: 1.3rem;
+  }
+
+  .faq-answer {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 576px) {
+  .blogs {
+    padding: 40px 15px;
+  }
+
+  .blogs-title {
+    font-size: 1.5rem;
+  }
+
+  .blogs-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .blog-card {
+    padding: 15px;
+  }
+
+  .blog-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .blog-text {
+    font-size: 0.85rem;
+  }
+
+  .author-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .faq-section {
+    padding: 1.5rem 10px;
+  }
+
+  .faq-title {
+    font-size: 1.4rem;
+  }
+
+  .faq-question {
+    font-size: 0.95rem;
+  }
+
+  .faq-toggle {
+    font-size: 1.2rem;
+  }
+
+  .faq-answer {
+    font-size: 0.85rem;
+  }
+}

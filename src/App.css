@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top right, #1a1033, #0b0015);
+  color: white;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Smooth touch interactions + remove mobile tap highlight */
+button,
+a,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(168, 85, 247, 0.8);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(168, 85, 247, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 0px; 
+  background: transparent;
+}
+
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #a855f7;
+  border-radius: 10px;
+}
+/* Prevent horizontal scrolling completely */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Smooth section reveal */
+section.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+section.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
