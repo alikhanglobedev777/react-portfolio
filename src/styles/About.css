@@ -19,6 +19,7 @@
   color: #a855f7;
 }
 
+<<<<<<< HEAD
 .about-meta {
   margin-bottom: 14px;
   font-size: 0.95rem;
@@ -35,6 +36,8 @@
   text-decoration: underline;
 }
 
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
 .about-intro {
   font-size: 1.1rem;
   line-height: 1.6;
@@ -152,6 +155,7 @@
   color: #bbb;
 }
 
+<<<<<<< HEAD
 .experience-details .experience-bullets {
   margin: 12px 0 0;
   padding-left: 20px;
@@ -164,6 +168,8 @@
   line-height: 1.35;
 }
 
+=======
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
 .experience-period {
   font-size: 0.9rem;
   color: #aaa;

@@ -46,6 +46,7 @@
 .contact-sub {
   font-size: 15px;
   color: #ddd;
+<<<<<<< HEAD
   margin-bottom: 20px;
   line-height: 1.6;
 }
@@ -70,6 +71,12 @@
   text-decoration: underline;
 }
 
+=======
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+>>>>>>> 392240ab03488f48f1bae68c4d7ab3b9ecd213b7
 .contact-btn {
   background: linear-gradient(90deg, #7a4dff, #a855f7);
   border: none;
