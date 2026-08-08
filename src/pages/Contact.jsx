@@ -166,7 +166,7 @@ export default function Contact() {
     <div className="contact-container" data-form-state={status} ref={rootRef}>
       <div className="contact-system page-shell">
         <header className="contact-system__header grid-12">
-          <p className="contact-system__index technical">07 / CONTACT</p>
+          <p className="contact-system__index technical">08 / CONTACT</p>
           <p className="contact-system__prompt technical">HAVE A PROJECT?</p>
           <h2 className="contact-title" aria-label="Let's build something.">
             <span>LET&apos;S</span><span>BUILD</span><span>SOMETHING.</span>
@@ -236,7 +236,7 @@ export default function Contact() {
         </div>
 
         <div className="contact-alternate">
-          <p className="technical">ALTERNATE CONTACT</p>
+          <p className="technical">DIRECT / SOCIAL</p>
           <SocialLinks variant="contact" includeEmail />
         </div>
       </div>

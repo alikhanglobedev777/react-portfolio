@@ -1,0 +1,76 @@
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  color: var(--color-foreground);
+}
+
+.brand-mark__glyph {
+  width: clamp(2.65rem, 3.1vw, 3.6rem);
+  height: auto;
+  overflow: visible;
+  flex: 0 0 auto;
+}
+
+.brand-mark__stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
+}
+
+.brand-mark__stroke--k {
+  stroke: var(--color-accent);
+}
+
+.brand-mark__node {
+  fill: var(--color-accent);
+}
+
+.brand-mark__wordmark {
+  display: grid;
+  gap: 0.12rem;
+  line-height: 1;
+}
+
+.brand-mark__wordmark strong {
+  font-family: var(--font-sans);
+  font-size: clamp(0.82rem, 0.92vw, 0.98rem);
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  white-space: nowrap;
+}
+
+.brand-mark__wordmark small {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: clamp(0.48rem, 0.5vw, 0.56rem);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+
+.brand-mark--compact .brand-mark__glyph {
+  width: clamp(2.5rem, 2.8vw, 3.25rem);
+}
+
+@media (max-width: 480px) {
+  .brand-mark {
+    gap: 0.55rem;
+  }
+
+  .brand-mark__glyph {
+    width: 2.55rem;
+  }
+
+  .brand-mark__wordmark strong {
+    font-size: 0.75rem;
+  }
+
+  .brand-mark__wordmark small {
+    display: none;
+  }
+}

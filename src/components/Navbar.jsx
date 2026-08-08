@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "../animation/gsap";
+import { gsap, ScrollTrigger } from "../animation/gsap";
+import { scrollToSection } from "../animation/scrollController";
 import { profile } from "../data/profile";
-import SocialLinks from "./SocialLinks";
+import BrandMark from "./BrandMark";
 import "../styles/Navbar.css";
 
 const menuItems = [
@@ -10,7 +11,8 @@ const menuItems = [
   { number: "03", label: "ABOUT", target: "about" },
   { number: "04", label: "EXPERIENCE", target: "experience" },
   { number: "05", label: "ARCHIVE", target: "archive" },
-  { number: "06", label: "CONTACT", target: "contact" },
+  { number: "06", label: "RESUME", target: "resume" },
+  { number: "07", label: "CONTACT", target: "contact" },
 ];
 
 export default function Navbar() {
@@ -21,7 +23,6 @@ export default function Navbar() {
   const reactionRef = useRef(null);
   const timelineRef = useRef(null);
   const returnFocusRef = useRef(null);
-  const navigationTimerRef = useRef(null);
 
   useLayoutEffect(() => {
     const menu = menuRef.current;
@@ -33,9 +34,10 @@ export default function Navbar() {
         .fromTo(menu, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.72 })
         .fromTo(".fullscreen-menu__reaction", { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 0.38, duration: 0.55 }, "-=0.5")
         .from(".fullscreen-menu__item a > span", { yPercent: 120, duration: 0.62, stagger: 0.055 }, "-=0.5")
-        .from(".social-links--menu .social-link", { y: 14, opacity: 0, duration: 0.38, stagger: 0.045 }, "-=0.32")
         .from(".fullscreen-menu__close, .fullscreen-menu__meta", { opacity: 0, y: 14, duration: 0.3, stagger: 0.05 }, "-=0.3")
-        .eventCallback("onReverseComplete", () => gsap.set(menu, { visibility: "hidden" }));
+        .eventCallback("onReverseComplete", () => {
+          gsap.set(menu, { visibility: "hidden" });
+        });
     }, menu);
 
     return () => {
@@ -52,6 +54,7 @@ export default function Navbar() {
     if (menuOpen) {
       returnFocusRef.current = document.activeElement;
       document.body.style.overflow = "hidden";
+      menu.style.pointerEvents = "auto";
       menu.setAttribute("aria-hidden", "false");
       if (reducedMotion) {
         gsap.set(menu, { visibility: "visible", clipPath: "inset(0 0 0 0)" });
@@ -90,6 +93,7 @@ export default function Navbar() {
     }
 
     menu.setAttribute("aria-hidden", "true");
+    menu.style.pointerEvents = "none";
     if (reducedMotion) {
       gsap.set(menu, { visibility: "hidden", clipPath: "inset(0 0 100% 0)" });
     } else {
@@ -102,20 +106,33 @@ export default function Navbar() {
 
   useEffect(() => () => {
     document.body.style.overflow = "";
-    window.clearTimeout(navigationTimerRef.current);
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
-  const handleNavigation = (event, target) => {
+  const goToSection = (event, target) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    closeMenu();
-    window.clearTimeout(navigationTimerRef.current);
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    navigationTimerRef.current = window.setTimeout(
-      () => document.getElementById(target)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" }),
-      reducedMotion ? 0 : 460,
-    );
+    const menu = menuRef.current;
+    document.body.style.overflow = "";
+    timelineRef.current?.progress(0).pause();
+    if (menu) {
+      menu.style.pointerEvents = "none";
+      menu.setAttribute("aria-hidden", "true");
+      gsap.set(menu, { visibility: "hidden", clipPath: "inset(0 0 100% 0)" });
+    }
+    setMenuOpen(false);
+
+    window.history.replaceState(window.history.state, "", target === "home" ? "/" : `/#${target}`);
+    window.requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      scrollToSection(target, { immediate: true });
+      const destination = target === "home"
+        ? document.documentElement
+        : document.getElementById(target);
+      destination?.scrollIntoView({ behavior: "auto", block: "start" });
+      ScrollTrigger.update();
+    });
   };
 
   const reactToItem = (index) => {
@@ -128,7 +145,9 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar" aria-label="Primary navigation">
-        <a className="navbar__mark" href="#home" aria-label="Ali Khan, index" data-cursor="link">AK/26</a>
+        <a className="navbar__mark" href="#home" onClick={(event) => goToSection(event, "home")} aria-label="Ali Khan, index" data-cursor="link">
+          <BrandMark />
+        </a>
         <button ref={toggleRef} className="navbar__toggle" type="button" onClick={() => setMenuOpen(true)} aria-expanded={menuOpen} aria-controls="fullscreen-menu" data-cursor="link" data-magnetic data-magnetic-strength="0.12">
           <span>MENU</span><span aria-hidden="true">+</span>
         </button>
@@ -137,7 +156,7 @@ export default function Navbar() {
       <div className="fullscreen-menu" id="fullscreen-menu" ref={menuRef} aria-hidden="true">
         <div className="fullscreen-menu__reaction" ref={reactionRef} data-active="0" aria-hidden="true" />
         <div className="fullscreen-menu__top">
-          <span className="technical">AK/26 — NAVIGATION</span>
+          <span className="fullscreen-menu__brand"><BrandMark compact /><span className="technical">NAVIGATION / AK</span></span>
           <button ref={closeRef} className="fullscreen-menu__close" type="button" onClick={closeMenu} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
             <span aria-hidden="true">×</span> CLOSE
           </button>
@@ -147,7 +166,7 @@ export default function Navbar() {
           <ol>
             {menuItems.map((item, index) => (
               <li className="fullscreen-menu__item" key={item.number} onPointerEnter={() => reactToItem(index)}>
-                <a href={`#${item.target}`} onClick={(event) => handleNavigation(event, item.target)} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
+                <a href={`#${item.target}`} onClick={(event) => goToSection(event, item.target)} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
                   <span><small>{item.number}</small>{item.label}</span>
                 </a>
               </li>
@@ -155,7 +174,6 @@ export default function Navbar() {
           </ol>
         </nav>
 
-        <SocialLinks variant="menu" tabIndex={menuOpen ? 0 : -1} />
 
         <div className="fullscreen-menu__meta technical">
           <span>{profile.role.toUpperCase()}</span>

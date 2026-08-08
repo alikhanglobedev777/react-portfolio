@@ -144,6 +144,9 @@
   padding: 1rem 0;
   border-bottom: 1px solid var(--project-accent);
   color: var(--color-foreground);
+  font-size: clamp(0.78rem, 0.84vw, 0.92rem);
+  font-weight: 750;
+  letter-spacing: 0.055em;
   text-decoration: none;
 }
 

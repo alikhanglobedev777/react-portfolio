@@ -7,16 +7,40 @@
   align-items: center;
   padding: clamp(1rem, 2.2vw, 1.8rem) var(--page-margin);
   color: var(--color-foreground);
-  mix-blend-mode: difference;
+  pointer-events: none;
 }
 
-.navbar__mark,
+.navbar > * {
+  pointer-events: auto;
+}
+
+.navbar__mark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.15rem;
+  padding: 0.35rem 0.55rem 0.35rem 0.35rem;
+  border: 1px solid rgba(239, 239, 232, 0.14);
+  background: rgba(5, 5, 5, 0.76);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  color: var(--color-foreground);
+  text-decoration: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease;
+}
+
+.navbar__mark:hover,
+.navbar__mark:focus-visible {
+  border-color: rgba(200, 255, 46, 0.65);
+  background: rgba(11, 11, 11, 0.94);
+}
+
 .navbar__toggle,
 .fullscreen-menu__close {
   color: inherit;
   font-family: var(--font-mono);
-  font-size: var(--type-technical);
-  font-weight: 500;
+  font-size: clamp(0.78rem, 0.84vw, 0.9rem);
+  font-weight: 750;
   letter-spacing: 0.07em;
   text-decoration: none;
 }
@@ -25,15 +49,29 @@
 .fullscreen-menu__close {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
+  gap: 0.7rem;
+  min-height: 3.15rem;
+  padding: 0.72rem 0.95rem;
+  border: 1px solid rgba(239, 239, 232, 0.24);
+  background: rgba(5, 5, 5, 0.78);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   cursor: pointer;
+  transition: color 220ms ease, border-color 220ms ease, background-color 220ms ease;
+}
+
+.navbar__toggle:hover,
+.navbar__toggle:focus-visible,
+.fullscreen-menu__close:hover,
+.fullscreen-menu__close:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(11, 11, 11, 0.96);
 }
 
 .navbar__toggle span:last-child {
-  font-size: 1rem;
+  font-size: 1.3rem;
   line-height: 0;
   transition: transform 220ms ease;
 }
@@ -70,6 +108,7 @@
   opacity: 0.38;
   background: radial-gradient(circle at 45% 45%, rgba(200, 255, 46, 0.075), transparent 63%);
   will-change: transform;
+  pointer-events: none;
 }
 
 .fullscreen-menu__reaction::before,
@@ -90,6 +129,7 @@
 .fullscreen-menu__reaction[data-active="3"] { border-radius: 0; transform: rotate(8deg); }
 .fullscreen-menu__reaction[data-active="4"] { background: repeating-radial-gradient(circle, rgba(239, 239, 232, 0.07) 0 1px, transparent 1px 28px); }
 .fullscreen-menu__reaction[data-active="5"] { background: radial-gradient(circle at center, rgba(200, 255, 46, 0.12), transparent 55%); }
+.fullscreen-menu__reaction[data-active="6"] { background: linear-gradient(115deg, rgba(200, 255, 46, 0.11), transparent 58%); }
 
 .fullscreen-menu__top,
 .fullscreen-menu__meta {
@@ -98,6 +138,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+
+.fullscreen-menu__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.fullscreen-menu__brand > .technical {
+  color: var(--color-muted);
+  font-size: clamp(0.62rem, 0.68vw, 0.74rem);
+  font-weight: 650;
 }
 
 .fullscreen-menu__close span {
@@ -127,14 +180,18 @@
 }
 
 .fullscreen-menu__item a {
+  position: relative;
+  z-index: 5;
   display: block;
-  width: max-content;
+  width: 100%;
   color: inherit;
   font-size: clamp(2.8rem, 8.2vh, 7rem);
-  font-weight: 500;
+  font-weight: 620;
   line-height: 0.98;
   letter-spacing: -0.065em;
   text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
   transition: transform 300ms cubic-bezier(.2, .7, .2, 1), opacity 300ms ease;
 }
 
@@ -149,7 +206,7 @@
   width: 2rem;
   font-family: var(--font-mono);
   font-size: var(--type-technical);
-  font-weight: 500;
+  font-weight: 750;
   letter-spacing: 0;
   color: var(--color-accent);
 }
@@ -269,5 +326,37 @@
 
   .fullscreen-menu__item small {
     width: 1.45rem;
+  }
+}
+
+
+/* Brand / control visibility hardening. */
+@media (max-width: 768px) {
+  .navbar__mark {
+    min-height: 2.9rem;
+    padding: 0.3rem 0.45rem 0.3rem 0.3rem;
+  }
+
+  .navbar__toggle,
+  .fullscreen-menu__close {
+    min-height: 2.9rem;
+    padding: 0.65rem 0.82rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.065em;
+  }
+
+  .fullscreen-menu__brand > .technical {
+    display: none;
+  }
+
+  .fullscreen-menu__item a {
+    font-weight: 650;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar__toggle {
+    gap: 0.5rem;
+    padding-inline: 0.72rem;
   }
 }

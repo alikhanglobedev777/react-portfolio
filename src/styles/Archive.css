@@ -286,6 +286,7 @@
   border-radius: 50%;
   color: var(--color-foreground);
   font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
   text-decoration: none;

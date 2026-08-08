@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "../animation/gsap";
 import { useGSAPContext } from "../hooks/useGSAPContext";
+import BrandMark from "./BrandMark";
 import Manifesto from "./Manifesto";
 import "../styles/EntryExperience.css";
 
@@ -224,7 +225,7 @@ export default function EntryExperience() {
       <div className="entry-loader" role="status" aria-label="Initializing Ali Khan portfolio">
         <div className="entry-loader__content">
           <div className="entry-loader__top">
-            <div className="clip"><span className="entry-loader__mark">AK/26</span></div>
+            <div className="clip"><span className="entry-loader__mark"><BrandMark compact /></span></div>
             <span>LAHORE / PAKISTAN</span>
           </div>
 

@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
 import { gsap } from "../animation/gsap";
+import { scrollToSection } from "../animation/scrollController";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import { profile } from "../data/profile";
-import SocialLinks from "./SocialLinks";
 import "../styles/Footer.css";
 
 export default function Footer() {
@@ -19,7 +19,7 @@ export default function Footer() {
     })
       .fromTo(footer, { y: 120, clipPath: "inset(12% 0 0 0)" }, { y: 0, clipPath: "inset(0% 0 0 0)", ease: "none" }, 0)
       .from(".footer-title__line span", { yPercent: 112, filter: "blur(12px)", stagger: 0.08, ease: "none" }, 0.14)
-      .from(".footer-meta > *, .footer-socials, .footer-back-to-top, .footer-mantra span", { y: 28, opacity: 0, stagger: 0.045, ease: "none" }, 0.35);
+      .from(".footer-meta > *, .footer-contact-hub, .footer-back-to-top, .footer-mantra span", { y: 28, opacity: 0, stagger: 0.045, ease: "none" }, 0.35);
 
     const listeners = [];
 
@@ -73,11 +73,11 @@ export default function Footer() {
 
   useGSAPContext(footerRef, setupMotion);
 
-  const handleBackToTop = (event) => {
+  const handleSectionNavigation = (event, target) => {
     event.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    scrollToSection(target, {
+      immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      duration: target === "home" ? 1.15 : 1.05,
     });
   };
 
@@ -96,12 +96,16 @@ export default function Footer() {
       </h2>
 
       <div className="footer-actions">
-        <div className="footer-socials">
-          <p className="technical">SOCIAL / CONTACT</p>
-          <SocialLinks variant="footer" />
+        <div className="footer-contact-hub">
+          <p className="technical">DIRECT / CONNECT</p>
+          <strong>GitHub, LinkedIn, WhatsApp and email are available in the contact hub.</strong>
+          <div className="footer-contact-hub__links">
+            <a href="#contact" onClick={(event) => handleSectionNavigation(event, "contact")} data-cursor="contact">OPEN CONTACT <span aria-hidden="true">↑</span></a>
+            <a href={profile.resumeUrl} download="Ali-Khan-Resume.pdf" data-cursor="link">RESUME <span aria-hidden="true">↓</span></a>
+          </div>
         </div>
 
-        <a className="footer-back-to-top" href="#home" onClick={handleBackToTop} data-cursor="link" aria-label="Back to top">
+        <a className="footer-back-to-top" href="#home" onClick={(event) => handleSectionNavigation(event, "home")} data-cursor="link" aria-label="Back to top">
           <span>BACK TO TOP</span><i aria-hidden="true">&uarr;</i>
         </a>
       </div>

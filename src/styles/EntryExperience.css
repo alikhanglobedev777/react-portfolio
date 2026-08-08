@@ -36,7 +36,8 @@
 
 .entry-loader__mark {
   display: block;
-  font-weight: 600;
+  width: max-content;
+  font-weight: 700;
 }
 
 .entry-loader__center {
@@ -139,7 +140,9 @@
 
 .entry-hero__title {
   position: relative;
-  z-index: 2;
+  /* The name is the primary hero layer. Keep it above role/supporting copy so
+     no informational badge can visually cut through ALI / KHAN. */
+  z-index: 4;
   grid-column: 1 / 13;
   align-self: end;
   margin: 0;
@@ -158,6 +161,8 @@
 
 .entry-hero__line > span {
   display: block;
+  opacity: 1;
+  visibility: visible;
   transform-origin: left bottom;
   will-change: transform, filter;
 }
@@ -229,20 +234,45 @@
 
 .entry-hero__secondary {
   position: absolute;
-  top: 35%;
-  left: 8.5%;
-  z-index: 5;
+  /* Keep the role inside the upper information band, below availability and
+     fully clear of the oversized ALI / KHAN title. */
+  top: clamp(9.5rem, 23vh, 12rem);
+  left: var(--page-margin);
+  z-index: 3;
+  width: max-content;
+  max-width: min(28rem, 38vw);
   margin: 0;
-  font-size: clamp(1.3rem, 2.3vw, 2.8rem);
-  font-weight: 500;
-  line-height: 0.88;
-  letter-spacing: -0.06em;
-  mix-blend-mode: difference;
+  padding: 0.66rem 0.88rem 0.7rem 0.98rem;
+  border-left: 2px solid var(--color-accent);
+  background: rgba(5, 5, 5, 0.82);
+  color: var(--color-foreground);
+  font-size: clamp(1.12rem, 1.62vw, 1.9rem);
+  font-weight: 760;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+  mix-blend-mode: normal;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 .entry-hero__secondary span,
 .entry-hero__statement span {
   display: block;
+}
+
+.entry-hero__secondary span:first-child {
+  color: var(--color-foreground);
+}
+
+.entry-hero__secondary span:last-child {
+  margin-top: 0.32rem;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.5em;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
 }
 
 .entry-hero__statement span {
@@ -456,10 +486,12 @@
   }
 
   .entry-hero__secondary {
-    top: 30%;
+    top: calc(9.7rem + env(safe-area-inset-top));
     left: max(var(--page-margin), env(safe-area-inset-left));
-    max-width: 48%;
-    font-size: clamp(0.78rem, 3.4vw, 0.95rem);
+    width: max-content;
+    max-width: min(72vw, 19rem);
+    padding: 0.62rem 0.82rem 0.66rem 0.9rem;
+    font-size: clamp(0.92rem, 3.8vw, 1.08rem);
   }
 
   .entry-hero__statement {
@@ -490,7 +522,9 @@
   }
 
   .entry-hero__secondary {
-    top: 31%;
+    top: calc(9.35rem + env(safe-area-inset-top));
+    max-width: 76vw;
+    font-size: clamp(0.86rem, 4vw, 0.98rem);
   }
 }
 
@@ -518,7 +552,10 @@
   }
 
   .entry-hero__secondary {
-    top: 34%;
+    top: calc(7.15rem + env(safe-area-inset-top));
+    max-width: 48vw;
+    padding-block: 0.5rem;
+    font-size: 0.84rem;
   }
 
   .entry-hero__statement {

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "../animation/gsap";
+import { registerSmoothScroller } from "../animation/scrollController";
 
 export function useSmoothScroll() {
   useEffect(() => {
@@ -24,16 +25,21 @@ export function useSmoothScroll() {
         duration: 1.05,
         smoothWheel: true,
         syncTouch: false,
+        // Internal navigation should cancel any remaining wheel/trackpad
+        // inertia instead of allowing it to compete with a new destination.
+        stopInertiaOnNavigate: true,
       });
 
       const updateScrollTrigger = () => ScrollTrigger.update();
       const advanceLenis = (time) => lenis.raf(time * 1000);
 
+      const unregisterSmoothScroller = registerSmoothScroller(lenis);
       lenis.on("scroll", updateScrollTrigger);
       gsap.ticker.add(advanceLenis);
       gsap.ticker.lagSmoothing(0);
 
       stopSmoothScroll = () => {
+        unregisterSmoothScroller();
         lenis.off("scroll", updateScrollTrigger);
         gsap.ticker.remove(advanceLenis);
         lenis.destroy();

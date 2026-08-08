@@ -17,15 +17,18 @@ function AppContent() {
     <>
       <InteractionLayer />
       {!isCaseStudy && <Navbar />}
-      <main key={location.pathname} className="page-transition">
+      <main key={isCaseStudy ? location.pathname : "portfolio-home"} className="page-transition">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<Home />} />
-          <Route path="/blogs" element={<Navigate to="/" replace />} />
-          <Route path="/projects" element={<Home />} />
-          <Route path="/contact" element={<Home />} />
-          <Route path="/resume" element={<Home />} />
           <Route path="/projects/:projectId" element={<ProjectCaseStudy />} />
+          <Route path="/projects" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<Navigate to="/" replace />} />
+          <Route path="/experience" element={<Navigate to="/" replace />} />
+          <Route path="/archive" element={<Navigate to="/" replace />} />
+          <Route path="/resume" element={<Navigate to="/" replace />} />
+          <Route path="/contact" element={<Navigate to="/" replace />} />
+          <Route path="/blogs" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       {!isCaseStudy && <Footer />}
