@@ -33,7 +33,7 @@ export default function Archive() {
       .from(".github-lab__title span", { yPercent: 110, filter: "blur(8px)", duration: 0.85, stagger: 0.08, ease: "expo.out" })
       .from(".github-lab__console, .github-lab__cta", { y: 32, opacity: 0, duration: 0.7, stagger: 0.1, ease: "power3.out" }, "-=0.42");
 
-    if (preview && previewImage) {
+    if (preview && previewImage && window.matchMedia("(min-width: 769px) and (pointer: fine)").matches) {
       const moveX = gsap.quickTo(preview, "x", { duration: 0.35, ease: "power3.out" });
       const moveY = gsap.quickTo(preview, "y", { duration: 0.35, ease: "power3.out" });
       const onMove = (event) => {

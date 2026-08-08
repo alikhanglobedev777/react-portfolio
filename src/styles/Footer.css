@@ -226,3 +226,50 @@
     filter: none !important;
   }
 }
+
+
+@media (max-width: 768px) {
+  .footer {
+    min-height: auto;
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+    padding-right: max(var(--page-margin), env(safe-area-inset-right));
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    padding-left: max(var(--page-margin), env(safe-area-inset-left));
+  }
+
+  .footer-meta {
+    gap: 1rem;
+    font-size: 0.56rem;
+  }
+
+  .footer-meta span:last-child {
+    text-align: right;
+  }
+
+  .footer-title {
+    margin: clamp(4rem, 14vw, 6rem) 0;
+    font-size: clamp(6.4rem, 36vw, 12rem);
+    line-height: 0.6;
+  }
+
+  .footer-title__line > span {
+    max-width: 100%;
+  }
+
+  .footer-back-to-top {
+    width: min(9.5rem, 42vw);
+    margin-top: clamp(3.5rem, 12vw, 5rem);
+    padding: 1rem;
+  }
+
+  .footer-mantra {
+    margin-top: clamp(4.5rem, 15vw, 6rem);
+    font-size: clamp(2.4rem, 12.5vw, 4.5rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .footer-title {
+    font-size: clamp(5.8rem, 34vw, 8rem);
+  }
+}

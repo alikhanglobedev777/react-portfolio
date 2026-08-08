@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { gsap } from "../animation/gsap";
 import { useGSAPContext } from "../hooks/useGSAPContext";
+import { profile } from "../data/profile";
 import SocialLinks from "./SocialLinks";
 import "../styles/Footer.css";
 
@@ -85,8 +86,8 @@ export default function Footer() {
       <div className="footer-pointer-field" aria-hidden="true" />
 
       <div className="footer-meta technical">
-        <span>ALI KHAN &copy; 2026</span>
-        <span>LAHORE / PAKISTAN</span>
+        <span>{profile.name.toUpperCase()} &copy; 2026</span>
+        <span>{profile.location.toUpperCase()}</span>
       </div>
 
       <h2 className="footer-title" aria-label="Ali Khan">

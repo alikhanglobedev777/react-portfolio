@@ -225,3 +225,55 @@
     filter: none !important;
   }
 }
+
+
+@media (max-width: 768px) {
+  .manifesto,
+  .manifesto__stage {
+    min-height: auto;
+  }
+
+  .manifesto__stage {
+    padding-top: clamp(6rem, 18vw, 7rem);
+    padding-bottom: clamp(4.5rem, 15vw, 6rem);
+  }
+
+  .manifesto__stage::before {
+    background-size: 25% 100%;
+  }
+
+  .manifesto__index {
+    top: 1.5rem;
+    gap: 1rem;
+  }
+
+  .manifesto__lead {
+    font-size: clamp(2.6rem, 12.5vw, 5rem);
+  }
+
+  .manifesto__system {
+    margin-top: clamp(4rem, 15vw, 6rem);
+    font-size: clamp(3.7rem, 18vw, 6.8rem);
+  }
+
+  .manifesto__support {
+    width: 100%;
+    max-width: 34rem;
+    margin: clamp(3rem, 12vw, 4.5rem) 0 0;
+  }
+
+  .manifesto__disciplines {
+    gap: 0.55rem 0.8rem;
+    margin-top: clamp(2.5rem, 10vw, 4rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .manifesto__lead {
+    font-size: clamp(2.35rem, 12vw, 3.4rem);
+  }
+
+  .manifesto__system {
+    font-size: clamp(3.25rem, 17vw, 4.8rem);
+  }
+}

@@ -49,3 +49,12 @@ html[data-project-transition="active"] .case-study-hero {
     display: none;
   }
 }
+
+
+@media (max-width: 768px) {
+  .project-transition-layer,
+  .project-transition-layer__visual {
+    max-width: 100vw;
+    max-height: 100dvh;
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "../animation/gsap";
+import { profile } from "../data/profile";
 import SocialLinks from "./SocialLinks";
 import "../styles/Navbar.css";
 
@@ -157,8 +158,8 @@ export default function Navbar() {
         <SocialLinks variant="menu" tabIndex={menuOpen ? 0 : -1} />
 
         <div className="fullscreen-menu__meta technical">
-          <span>FULL-STACK ENGINEER</span>
-          <span>LAHORE / PAKISTAN</span>
+          <span>{profile.role.toUpperCase()}</span>
+          <span>{profile.location.toUpperCase()}</span>
         </div>
       </div>
     </>

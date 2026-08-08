@@ -34,20 +34,39 @@ export default function Projects() {
 
     media.add("(min-width: 769px)", () => {
       let activeIndex = -1;
-      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
-      const scrollDuration = () => Math.min(
-        distance(),
-        Math.max(window.innerHeight * 2, window.innerWidth * 1.5),
-      );
+      const pin = section.querySelector(".systems-pin");
+      const lastPanel = panels.at(-1);
+
+      // Measure to the real edge of the final project instead of track.scrollWidth.
+      // The track has decorative end padding, so using scrollWidth made ScrollTrigger
+      // keep the section pinned after the last visible project had already passed.
+      const travelDistance = () => {
+        if (!pin || !lastPanel) return 0;
+        const viewportWidth = pin.clientWidth || window.innerWidth;
+        const endInset = Math.max(24, viewportWidth * 0.035);
+        return Math.max(0, lastPanel.offsetLeft + lastPanel.offsetWidth - viewportWidth + endInset);
+      };
+
+      // Give the horizontal gallery enough vertical scroll distance for every
+      // project to remain visible. The previous aggressive duration cap could
+      // move the track several viewport-widths during a small wheel gesture.
+      const scrollDuration = () => {
+        const travel = travelDistance();
+        return Math.max(
+          window.innerHeight * 1.8,
+          travel * 0.82,
+        );
+      };
 
       const horizontal = gsap.to(track, {
-        x: () => -distance(),
+        x: () => -travelDistance(),
         ease: "none",
         scrollTrigger: {
-          trigger: ".systems-pin",
+          trigger: pin,
           start: "top top",
           end: () => "+=" + scrollDuration(),
           pin: true,
+          pinSpacing: true,
           scrub: 0.5,
           anticipatePin: 1,
           refreshPriority: 1,
@@ -105,7 +124,11 @@ export default function Projects() {
       });
 
       return () => {
+        // Kill the ScrollTrigger explicitly so React StrictMode / route remounts
+        // cannot leave a stale pin spacer that looks like a blank scroll region.
+        horizontal.scrollTrigger?.kill();
         horizontal.kill();
+        gsap.set(track, { clearProps: "transform" });
         listeners.forEach((remove) => remove());
       };
     });

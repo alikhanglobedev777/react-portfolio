@@ -204,3 +204,85 @@
     filter: none !important;
   }
 }
+
+
+@media (max-width: 768px) {
+  .case-study {
+    overflow-x: clip;
+  }
+
+  .case-study-hero {
+    height: 100svh;
+    height: 100dvh;
+    min-height: 34rem;
+  }
+
+  .case-study-hero__art .project-artwork {
+    padding-top: calc(4.5rem + env(safe-area-inset-top));
+    padding-right: max(var(--page-margin), env(safe-area-inset-right));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    padding-left: max(var(--page-margin), env(safe-area-inset-left));
+  }
+
+  .case-study-hero__meta {
+    top: calc(4.5rem + env(safe-area-inset-top));
+    right: max(var(--page-margin), env(safe-area-inset-right));
+    left: max(var(--page-margin), env(safe-area-inset-left));
+    gap: 0.75rem;
+  }
+
+  .case-study-hero__title {
+    right: max(var(--page-margin), env(safe-area-inset-right));
+    bottom: calc(6.25rem + env(safe-area-inset-bottom));
+    left: max(var(--page-margin), env(safe-area-inset-left));
+    font-size: clamp(3.6rem, 17vw, 7rem);
+    line-height: 0.82;
+    overflow-wrap: anywhere;
+  }
+
+  .case-study-hero__title span {
+    width: auto;
+  }
+
+  .case-study-hero__scroll {
+    right: max(var(--page-margin), env(safe-area-inset-right));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    left: max(var(--page-margin), env(safe-area-inset-left));
+  }
+
+  .case-study-overview {
+    min-height: auto;
+    padding-top: var(--section-space);
+    padding-bottom: var(--section-space);
+  }
+
+  .case-study-overview__lead {
+    margin-top: 2.5rem;
+  }
+
+  .case-study-overview__lead p {
+    font-size: clamp(2.15rem, 9.2vw, 4rem);
+  }
+
+  .case-study-facts {
+    margin-top: clamp(3.5rem, 12vw, 5rem);
+  }
+
+  .case-study-facts div {
+    grid-template-columns: minmax(4.5rem, 0.45fr) 1.55fr;
+    gap: 0.75rem;
+  }
+
+  .case-study-overview__live {
+    margin-top: clamp(3rem, 10vw, 4.5rem);
+    min-height: 3.25rem;
+    align-items: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .case-study-facts div {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}

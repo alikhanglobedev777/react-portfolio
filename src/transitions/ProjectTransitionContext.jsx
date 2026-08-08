@@ -93,7 +93,9 @@ export function ProjectTransitionProvider({ children }) {
       ".systems-header, .systems-progress, .system-project__meta, .system-project__copy, .navbar",
     );
     const pageMargin = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue("--page-margin")) || 24;
-    const destinationSize = Math.min(window.innerWidth * (mobile ? 0.19 : 0.14), mobile ? 104 : 230);
+    const viewportWidth = window.visualViewport?.width || document.documentElement.clientWidth || window.innerWidth;
+    const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
+    const destinationSize = Math.min(viewportWidth * (mobile ? 0.19 : 0.14), mobile ? 104 : 230);
 
     gsap.timeline({
       defaults: { ease: "expo.inOut" },
@@ -124,15 +126,15 @@ export function ProjectTransitionProvider({ children }) {
       .to(visual, {
         left: 0,
         top: 0,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: viewportWidth,
+        height: viewportHeight,
         clipPath: "inset(0% 0% 0% 0%)",
         duration: mobile ? 0.72 : 1.18,
       }, 0)
       .to(title, {
         left: pageMargin,
-        top: window.innerHeight * 0.66,
-        width: window.innerWidth - pageMargin * 2,
+        top: viewportHeight * 0.66,
+        width: viewportWidth - pageMargin * 2,
         fontSize: destinationSize,
         lineHeight: 0.78,
         letterSpacing: "-0.075em",

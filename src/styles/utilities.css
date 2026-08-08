@@ -177,3 +177,28 @@
     display: none;
   }
 }
+
+
+.page-shell,
+.grid-12,
+.grid-12 > * {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .effect-grid {
+    opacity: 0.12;
+    background-size: calc((100vw - (2 * var(--page-margin))) / 4) 100%;
+  }
+
+  .effect-noise {
+    opacity: 0.018;
+  }
+}
+
+@media (pointer: coarse), (hover: none) {
+  .effect-light,
+  .global-cursor {
+    display: none !important;
+  }
+}

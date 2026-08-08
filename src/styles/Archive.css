@@ -7,9 +7,11 @@
 }
 
 .archive-header {
-  min-height: 78svh;
-  padding-top: var(--section-space-sm);
-  padding-bottom: clamp(5rem, 10vh, 9rem);
+  /* Keep the archive entrance cinematic without reserving nearly a full
+     viewport of empty space before the heading becomes visible. */
+  min-height: 58svh;
+  padding-top: clamp(4.5rem, 7vw, 7rem);
+  padding-bottom: clamp(4rem, 7vw, 7rem);
   align-content: end;
 }
 
@@ -39,7 +41,9 @@
 }
 
 .archive-table {
-  padding-bottom: var(--section-space);
+  /* The table already has substantial height from its rows. A full global
+     section-space here created a dead scroll zone before LAB / GITHUB. */
+  padding-bottom: clamp(3.5rem, 6vw, 6rem);
 }
 
 .archive-table__head,
@@ -158,13 +162,15 @@
 }
 
 .github-lab {
-  min-height: 150svh;
-  padding-top: var(--section-space);
+  /* Let the actual LAB content determine the section height. The previous
+     150svh + centered grid produced a large blank runway above/below it. */
+  min-height: auto;
+  padding-top: clamp(5rem, 8vw, 8rem);
   padding-bottom: var(--section-space);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--grid-gap);
-  align-content: center;
+  align-content: start;
   background:
     radial-gradient(circle at 78% 28%, rgba(200, 255, 46, 0.06), transparent 30%),
     #080808;
@@ -311,7 +317,7 @@
 
 @media (max-width: 768px) {
   .archive-header {
-    min-height: 68svh;
+    min-height: 52svh;
   }
 
   .archive-header__index,
@@ -370,7 +376,7 @@
   }
 
   .github-lab {
-    min-height: 120svh;
+    min-height: auto;
   }
 
   .github-lab__eyebrow,
@@ -411,5 +417,124 @@
 
   .github-lab__caret {
     animation: none;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .archive {
+    overflow: clip;
+  }
+
+  .archive-header {
+    min-height: auto;
+    padding-top: var(--section-space);
+    padding-bottom: clamp(3.5rem, 13vw, 5rem);
+  }
+
+  .archive-header__title {
+    font-size: clamp(4.2rem, 19.5vw, 7.6rem);
+  }
+
+  .archive-header__copy {
+    grid-column: 1 / 13;
+    width: min(100%, 32rem);
+    margin-top: 1.75rem;
+  }
+
+  .archive-table {
+    padding-bottom: clamp(3rem, 10vw, 4.5rem);
+  }
+
+  .archive-table__head,
+  .archive-row {
+    grid-template-columns: 2rem minmax(0, 1fr) minmax(3.25rem, auto);
+    gap: 0.65rem;
+  }
+
+  .archive-table__head {
+    min-height: 2.75rem;
+    font-size: 0.58rem;
+  }
+
+  .archive-row {
+    min-height: 0;
+    padding: 1.25rem 0;
+  }
+
+  .archive-row:hover,
+  .archive-row:focus-within {
+    transform: none;
+  }
+
+  .archive-row__project {
+    min-width: 0;
+  }
+
+  .archive-row__project a {
+    max-width: 100%;
+    font-size: clamp(1.45rem, 6.8vw, 2.35rem);
+    overflow-wrap: anywhere;
+  }
+
+  .archive-row__links {
+    font-size: 0.58rem;
+  }
+
+  .archive-preview {
+    display: none !important;
+  }
+
+  .github-lab {
+    padding-top: clamp(4.5rem, 15vw, 6rem);
+    padding-bottom: var(--section-space);
+  }
+
+  .github-lab__eyebrow {
+    margin-bottom: clamp(2.5rem, 9vw, 4rem);
+  }
+
+  .github-lab__title {
+    font-size: clamp(4.4rem, 21vw, 8rem);
+  }
+
+  .github-lab__console {
+    margin-top: clamp(3.5rem, 12vw, 5.5rem);
+  }
+
+  .github-lab__console-head {
+    padding: 0.75rem 0;
+  }
+
+  .github-lab__console li {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.65rem;
+    min-height: 4.25rem;
+  }
+
+  .github-lab__console li > span:nth-child(2) {
+    font-size: clamp(1.35rem, 6vw, 2.2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .github-lab__prompt {
+    min-height: 3.5rem;
+    font-size: 0.58rem;
+  }
+
+  .github-lab__cta {
+    justify-self: stretch;
+    width: 100%;
+    min-height: 4.75rem;
+    aspect-ratio: auto;
+    margin-top: clamp(3rem, 10vw, 4.5rem);
+    padding: 1rem 1.1rem;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 0;
+  }
+
+  .github-lab__cta i {
+    align-self: auto;
   }
 }

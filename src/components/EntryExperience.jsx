@@ -41,6 +41,7 @@ export default function EntryExperience() {
     const manifestoIndex = root.querySelector(".manifesto__index");
     const globalGrid = document.querySelector(".effect-grid");
     const nextSection = document.querySelector("#projects");
+    const selectedHeader = nextSection?.querySelector(".systems-header");
     const selectedTitle = nextSection?.querySelectorAll(".systems-header__title span");
     const selectedDetails = nextSection?.querySelectorAll(".systems-header__index, .systems-header__copy");
 
@@ -105,7 +106,12 @@ export default function EntryExperience() {
           })
             .to(manifestoSystem, { yPercent: -14, opacity: 0.14, filter: "blur(7px)", stagger: 0.035, ease: "none" }, 0)
             .to([manifestoSupport, manifestoDisciplines], { y: -24, opacity: 0, ease: "none" }, 0)
-            .fromTo(nextSection, { y: 88, backgroundColor: "#0b0b0b" }, { y: 0, backgroundColor: "#050505", ease: "none" }, 0)
+            // Never transform the whole #projects section. A transformed ancestor
+            // breaks ScrollTrigger's fixed pinning geometry and can leave a long
+            // empty/black scroll region while .systems-pin is active. Animate the
+            // header instead and keep the section itself transform-free.
+            .fromTo(nextSection, { backgroundColor: "#0b0b0b" }, { backgroundColor: "#050505", ease: "none" }, 0)
+            .fromTo(selectedHeader, { y: 88 }, { y: 0, ease: "none" }, 0)
             .fromTo(selectedTitle, {
               yPercent: (index) => (index ? -108 : 108),
               clipPath: "inset(0 0 100% 0)",

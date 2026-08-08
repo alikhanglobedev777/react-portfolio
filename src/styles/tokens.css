@@ -35,3 +35,27 @@
   --z-cursor: 400;
   --z-modal: 500;
 }
+
+
+/* Responsive hardening: compact spacing/type on touch-sized viewports without
+   changing the desktop art direction. */
+@media (max-width: 768px) {
+  :root {
+    --page-margin: clamp(1rem, 4.8vw, 1.5rem);
+    --grid-gap: clamp(0.55rem, 2.6vw, 0.85rem);
+    --section-space-sm: clamp(3.75rem, 13vw, 5rem);
+    --section-space: clamp(4.75rem, 17vw, 6.5rem);
+    --section-space-lg: clamp(6rem, 21vw, 8rem);
+    --type-body-lg: clamp(1.05rem, 4.8vw, 1.25rem);
+    --type-body: clamp(0.98rem, 4vw, 1.05rem);
+    --type-caption: clamp(0.72rem, 3vw, 0.8rem);
+    --type-technical: clamp(0.62rem, 2.65vw, 0.7rem);
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --page-margin: 0.9rem;
+    --grid-gap: 0.55rem;
+  }
+}

@@ -398,3 +398,102 @@
     animation: none !important;
   }
 }
+
+
+@media (max-width: 768px) {
+  .contact-container {
+    min-height: auto;
+    overflow: clip;
+  }
+
+  .contact-system {
+    padding-top: var(--section-space);
+    padding-bottom: var(--section-space);
+  }
+
+  .contact-system__header {
+    min-height: auto;
+    padding-bottom: clamp(3.5rem, 12vw, 5rem);
+    align-content: start;
+  }
+
+  .contact-system__prompt {
+    grid-column: 1 / 13;
+    margin-top: 0.75rem;
+    text-align: left;
+  }
+
+  .contact-title {
+    margin-top: clamp(3rem, 11vw, 4.5rem);
+    font-size: clamp(4.6rem, 21vw, 7.8rem);
+  }
+
+  .contact-title span:nth-child(2),
+  .contact-title span:nth-child(3) {
+    margin-left: 0;
+  }
+
+  .contact-title span:nth-child(3) {
+    font-size: clamp(2.9rem, 13.8vw, 5.4rem);
+  }
+
+  .contact-form-layout {
+    padding-top: clamp(3.5rem, 12vw, 5rem);
+    padding-bottom: clamp(5rem, 16vw, 7rem);
+  }
+
+  .contact-form-intro {
+    margin-bottom: clamp(3rem, 11vw, 4.5rem);
+  }
+
+  .contact-form-intro p {
+    font-size: clamp(1.55rem, 6.6vw, 2.35rem);
+  }
+
+  .contact-form-stage {
+    min-height: auto;
+  }
+
+  .contact-form-stage__top {
+    gap: 1rem;
+    font-size: 0.6rem;
+  }
+
+  .field {
+    gap: 0.9rem;
+    padding: clamp(1.25rem, 5vw, 1.75rem) 0;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: clamp(1.3rem, 5.8vw, 1.85rem);
+  }
+
+  .contact-form textarea {
+    min-height: 9rem;
+  }
+
+  .contact-submit {
+    min-height: 4.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .contact-success {
+    inset: 2.75rem 0 0;
+    min-height: calc(100% - 2.75rem);
+  }
+
+  .contact-success strong {
+    font-size: clamp(3.7rem, 17vw, 6rem);
+  }
+
+  .contact-alternate {
+    padding-top: clamp(4.5rem, 15vw, 6rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .contact-title {
+    font-size: clamp(4rem, 20vw, 5.4rem);
+  }
+}

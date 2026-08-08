@@ -536,3 +536,130 @@
     filter: none !important;
   }
 }
+
+
+@media (max-width: 768px) {
+  .journey {
+    overflow: clip;
+  }
+
+  .journey-stack {
+    min-height: auto;
+    padding-bottom: var(--section-space);
+  }
+
+  .stack-header {
+    min-height: auto;
+    padding-top: var(--section-space);
+    padding-bottom: clamp(3.5rem, 12vw, 5rem);
+  }
+
+  .stack-header h2 {
+    font-size: clamp(5rem, 24vw, 8rem);
+  }
+
+  .stack-header > p:last-child {
+    grid-column: 1 / 13;
+    width: min(100%, 32rem);
+    margin-top: 1.75rem;
+  }
+
+  .stack-marquees {
+    gap: 0.65rem;
+    padding-block: 1.5rem;
+    transform: rotate(-0.6deg) scale(1.01);
+  }
+
+  .stack-technology {
+    font-size: clamp(2.4rem, 11vw, 4.7rem);
+  }
+
+  .journey-experience,
+  .experience-layout {
+    min-height: auto;
+  }
+
+  .experience-layout {
+    padding-top: var(--section-space);
+    padding-bottom: var(--section-space);
+  }
+
+  .experience-heading {
+    padding-bottom: clamp(4rem, 14vw, 6rem);
+  }
+
+  .experience-heading > p {
+    margin-bottom: 2rem;
+  }
+
+  .experience-heading h2 {
+    font-size: clamp(4.4rem, 20vw, 7rem);
+  }
+
+  .experience-timeline {
+    padding-left: 1.35rem;
+  }
+
+  .experience-entry {
+    padding: 0 0 clamp(5rem, 16vw, 7rem) 0.75rem;
+  }
+
+  .experience-entry::before {
+    left: calc(-1.35rem - 4px);
+  }
+
+  .experience-entry__number {
+    margin-bottom: 1.25rem;
+  }
+
+  .experience-entry__year {
+    margin-bottom: 2.25rem;
+    font-size: clamp(4.8rem, 22vw, 8rem);
+  }
+
+  .experience-entry__role {
+    font-size: clamp(2.15rem, 9.2vw, 3.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .experience-entry__responsibilities {
+    margin-top: 2.5rem;
+  }
+
+  .experience-entry__responsibilities li {
+    padding: 0.8rem 0 0.8rem 1.25rem;
+    font-size: 0.98rem;
+  }
+
+  .journey-about,
+  .about-layout {
+    min-height: auto;
+  }
+
+  .about-layout {
+    padding-top: var(--section-space);
+    padding-bottom: var(--section-space-lg);
+    align-content: start;
+  }
+
+  .about-index {
+    margin-bottom: clamp(3rem, 10vw, 4.5rem);
+  }
+
+  .about-statement {
+    font-size: clamp(4rem, 18.5vw, 7rem);
+  }
+
+  .about-statement__line:nth-child(3) span {
+    font-size: clamp(2.85rem, 13.5vw, 5.2rem);
+  }
+
+  .about-copy {
+    margin-top: clamp(3.5rem, 12vw, 5rem);
+    font-size: clamp(1.55rem, 6.6vw, 2.45rem);
+  }
+
+  .about-meta {
+    margin-top: clamp(3.5rem, 12vw, 5rem);
+  }
+}

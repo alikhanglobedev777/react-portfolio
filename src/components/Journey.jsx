@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { gsap } from "../animation/gsap";
-import { experiences, stackRows } from "../data/profile";
+import { experiences, profile, stackRows } from "../data/profile";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/Journey.css";
 
@@ -189,10 +189,10 @@ export default function Journey() {
             <span className="about-statement__line"><span>ENGINEERING.</span></span>
           </h2>
 
-          <p className="about-copy">Ali Khan is a full-stack engineer and creative developer building modern digital products from interface and interaction through APIs, backend services, and database systems.</p>
+          <p className="about-copy">{profile.name} is a full-stack engineer and creative developer building modern digital products from interface and interaction through APIs, backend services, and database systems.</p>
 
           <ul className="about-meta technical" aria-label="Profile information">
-            <li>LAHORE / PAKISTAN</li>
+            <li>{profile.location.toUpperCase()}</li>
             <li>FULL-STACK ENGINEERING</li>
             <li>CREATIVE DEVELOPMENT</li>
             <li>DIGITAL SYSTEMS</li>

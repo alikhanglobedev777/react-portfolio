@@ -101,7 +101,9 @@
   gap: clamp(3rem, 5vw, 6rem);
   width: max-content;
   height: 100%;
-  padding: 0 18vw 0 var(--page-margin);
+  /* Keep only a small end gutter. The previous 18vw right padding was included
+     in the horizontal travel measurement and produced a visible empty tail. */
+  padding: 0 max(var(--page-margin), 3.5vw) 0 var(--page-margin);
   will-change: transform;
 }
 
@@ -575,5 +577,110 @@
   .project-artwork,
   .system-project__title i {
     transform: none !important;
+  }
+}
+
+
+/* Mobile projects are deliberately vertical: no pinning, no fake viewport
+   heights, and media scales from width instead of browser chrome height. */
+@media (max-width: 768px) {
+  .selected-systems {
+    overflow: clip;
+  }
+
+  .systems-header {
+    min-height: auto;
+    padding-top: var(--section-space);
+    padding-bottom: clamp(3.5rem, 13vw, 5rem);
+  }
+
+  .systems-header__title {
+    font-size: clamp(3.7rem, 18.5vw, 7rem);
+  }
+
+  .systems-header__copy {
+    grid-column: 1 / 13;
+    width: min(100%, 32rem);
+    margin-top: 2rem;
+  }
+
+  .systems-track {
+    overflow: visible;
+  }
+
+  .system-project {
+    min-height: auto;
+    padding: clamp(3.5rem, 12vw, 5rem) 0 clamp(4.5rem, 15vw, 6rem);
+  }
+
+  .system-project__meta {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .system-project__meta span:nth-child(2) {
+    overflow-wrap: anywhere;
+  }
+
+  .system-project__media {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    perspective: none;
+  }
+
+  .system-project__copy {
+    margin-top: clamp(2rem, 8vw, 3rem);
+  }
+
+  .system-project__title {
+    margin-bottom: 1.35rem;
+    font-size: clamp(3.2rem, 15.5vw, 6rem);
+    overflow-wrap: anywhere;
+  }
+
+  .system-project__description {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  .system-project__technology {
+    margin: 1.35rem 0 1.75rem;
+  }
+
+  .system-project__link {
+    width: 100%;
+    min-height: 3.25rem;
+    align-items: center;
+  }
+
+  .project-artwork {
+    padding: 0.85rem;
+  }
+
+  .project-artwork__mark {
+    font-size: clamp(11rem, 60vw, 24rem);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .system-project__media {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 430px) {
+  .system-project__meta {
+    font-size: 0.6rem;
+  }
+
+  .system-project__media {
+    aspect-ratio: 1 / 1.12;
+  }
+
+  .project-artwork__top,
+  .project-artwork__bottom {
+    font-size: 0.56rem;
   }
 }

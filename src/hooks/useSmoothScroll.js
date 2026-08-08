@@ -5,13 +5,17 @@ import { gsap, ScrollTrigger } from "../animation/gsap";
 export function useSmoothScroll() {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopViewport = window.matchMedia("(min-width: 769px)");
     let stopSmoothScroll;
 
     const syncSmoothScroll = () => {
       stopSmoothScroll?.();
       stopSmoothScroll = undefined;
 
-      if (reducedMotion.matches) {
+      // Native touch scrolling is intentionally kept on phones/tablets. It is
+      // faster, respects browser chrome changes, and avoids a second scroll
+      // abstraction competing with mobile viewport resizing.
+      if (reducedMotion.matches || !desktopViewport.matches) {
         ScrollTrigger.refresh();
         return;
       }
@@ -20,7 +24,6 @@ export function useSmoothScroll() {
         duration: 1.05,
         smoothWheel: true,
         syncTouch: false,
-        touchMultiplier: 1.15,
       });
 
       const updateScrollTrigger = () => ScrollTrigger.update();
@@ -39,10 +42,12 @@ export function useSmoothScroll() {
     };
 
     reducedMotion.addEventListener("change", syncSmoothScroll);
+    desktopViewport.addEventListener("change", syncSmoothScroll);
     syncSmoothScroll();
 
     return () => {
       reducedMotion.removeEventListener("change", syncSmoothScroll);
+      desktopViewport.removeEventListener("change", syncSmoothScroll);
       stopSmoothScroll?.();
     };
   }, []);

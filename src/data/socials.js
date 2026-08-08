@@ -1,9 +1,11 @@
+import { profile } from "./profile";
+
 const whatsappNumber = "923021848264";
 const whatsappMessage = "Hi Ali, I came across your portfolio and would like to discuss a project.";
 
 export const emailContact = {
   name: "EMAIL",
-  href: "mailto:ak.alikhan.5911@gmail.com",
+  href: `mailto:${profile.email}`,
   external: false,
   cursorState: "contact",
   ariaLabel: "Email Ali Khan",
