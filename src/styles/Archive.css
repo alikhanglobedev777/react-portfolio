@@ -1,0 +1,415 @@
+.archive {
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  background: #080808;
+  color: var(--color-foreground);
+}
+
+.archive-header {
+  min-height: 78svh;
+  padding-top: var(--section-space-sm);
+  padding-bottom: clamp(5rem, 10vh, 9rem);
+  align-content: end;
+}
+
+.archive-header__index {
+  grid-column: 1 / 4;
+  align-self: start;
+  margin: 0 0 auto;
+  color: var(--color-muted);
+}
+
+.archive-header__title {
+  grid-column: 1 / 10;
+  margin: 0;
+  font-size: clamp(5.2rem, 13vw, 14rem);
+  font-weight: 500;
+  line-height: 0.76;
+  letter-spacing: -0.085em;
+}
+
+.archive-header__copy {
+  grid-column: 9 / 13;
+  margin: 2rem 0 0;
+  color: #aaa9a3;
+  font-size: var(--type-body-lg);
+  line-height: 1.55;
+  letter-spacing: -0.025em;
+}
+
+.archive-table {
+  padding-bottom: var(--section-space);
+}
+
+.archive-table__head,
+.archive-row {
+  display: grid;
+  grid-template-columns: minmax(3rem, 0.35fr) minmax(14rem, 2fr) minmax(8rem, 0.8fr) minmax(4rem, 0.35fr) minmax(9rem, 0.75fr);
+  gap: var(--grid-gap);
+  align-items: center;
+}
+
+.archive-table__head {
+  min-height: 3rem;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-foreground);
+}
+
+.archive-table__head span:last-child {
+  text-align: right;
+}
+
+.archive-row {
+  position: relative;
+  min-height: clamp(5.5rem, 8.8vw, 8.7rem);
+  border-bottom: 1px solid var(--color-border);
+  transition: opacity 260ms ease, transform 420ms cubic-bezier(.2, .75, .2, 1), border-color 260ms ease;
+}
+
+.archive-table__body:has(.archive-row:hover) .archive-row:not(:hover),
+.archive-table__body:has(.archive-row:focus-within) .archive-row:not(:focus-within) {
+  opacity: 0.22;
+}
+
+.archive-row:hover,
+.archive-row:focus-within {
+  transform: translateX(clamp(0.5rem, 1.5vw, 1.7rem));
+  border-color: var(--color-foreground);
+}
+
+.archive-row__index,
+.archive-row__type,
+.archive-row__year {
+  color: var(--color-muted);
+}
+
+.archive-row__project a {
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: flex-start;
+  color: var(--color-foreground);
+  font-size: clamp(1.65rem, 3vw, 3.6rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  text-decoration: none;
+}
+
+.archive-row__project sup {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.4em;
+  line-height: 1;
+}
+
+.archive-row__project small {
+  display: none;
+}
+
+.archive-row__links {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(0.6rem, 1.4vw, 1.4rem);
+}
+
+.archive-row__links a {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 220ms ease;
+}
+
+.archive-row__links a:hover,
+.archive-row__links a:focus-visible {
+  color: var(--color-foreground);
+}
+
+.archive-row__links i {
+  display: inline-block;
+  font-style: normal;
+  transition: transform 420ms cubic-bezier(.2, .75, .2, 1);
+}
+
+.archive-row:hover .archive-row__links i,
+.archive-row:focus-within .archive-row__links i {
+  transform: translate(0.45rem, -0.45rem);
+}
+
+.archive-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: calc(var(--z-content) + 10);
+  width: min(30vw, 28rem);
+  aspect-ratio: 16 / 10;
+  visibility: hidden;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--color-surface);
+  transform: scale(0.94);
+  transform-origin: left center;
+}
+
+.archive-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.github-lab {
+  min-height: 150svh;
+  padding-top: var(--section-space);
+  padding-bottom: var(--section-space);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-content: center;
+  background:
+    radial-gradient(circle at 78% 28%, rgba(200, 255, 46, 0.06), transparent 30%),
+    #080808;
+}
+
+.github-lab__eyebrow {
+  grid-column: 1 / 4;
+  margin: 0 0 clamp(3rem, 8vw, 8rem);
+  color: var(--color-accent);
+}
+
+.github-lab__title {
+  grid-column: 1 / 13;
+  margin: 0;
+  font-size: clamp(6rem, 17.5vw, 19rem);
+  font-weight: 500;
+  line-height: 0.67;
+  letter-spacing: -0.095em;
+}
+
+.github-lab__title span {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.github-lab__title span:nth-child(2) {
+  margin-left: 16%;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-foreground);
+}
+
+.github-lab__title span:nth-child(3) {
+  margin-left: auto;
+}
+
+.github-lab__console {
+  grid-column: 5 / 13;
+  margin-top: clamp(6rem, 13vw, 13rem);
+  border-top: 1px solid var(--color-foreground);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.github-lab__console-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+.github-lab__console ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.github-lab__console li {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  align-items: center;
+  min-height: clamp(4.5rem, 7vw, 6.75rem);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.github-lab__console li > span:first-child {
+  color: var(--color-muted);
+}
+
+.github-lab__console li > span:nth-child(2) {
+  font-size: clamp(1.6rem, 2.8vw, 3rem);
+  letter-spacing: -0.045em;
+}
+
+.github-lab__console li i {
+  color: var(--color-accent);
+  font-style: normal;
+}
+
+.github-lab__prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 4rem;
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.github-lab__prompt > span:first-child {
+  color: var(--color-accent);
+}
+
+.github-lab__caret {
+  width: 0.55rem;
+  height: 1em;
+  background: var(--color-accent);
+  animation: lab-caret 1.2s steps(1) infinite;
+}
+
+.github-lab__cta {
+  grid-column: 9 / 13;
+  justify-self: end;
+  width: clamp(13rem, 18vw, 18rem);
+  aspect-ratio: 1;
+  margin-top: clamp(4rem, 8vw, 8rem);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  color: var(--color-foreground);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  transition: color 260ms ease, background-color 260ms ease;
+  will-change: transform;
+}
+
+.github-lab__cta i {
+  align-self: flex-end;
+  color: var(--color-accent);
+  font-size: 2rem;
+  font-style: normal;
+  will-change: transform;
+}
+
+.github-lab__cta:hover {
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
+}
+
+.github-lab__cta:hover i {
+  color: var(--color-accent-foreground);
+}
+
+@keyframes lab-caret {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .archive-header {
+    min-height: 68svh;
+  }
+
+  .archive-header__index,
+  .archive-header__title {
+    grid-column: 1 / 13;
+  }
+
+  .archive-header__title {
+    font-size: clamp(4.6rem, 21vw, 8rem);
+  }
+
+  .archive-header__copy {
+    grid-column: 4 / 13;
+    font-size: 0.95rem;
+  }
+
+  .archive-table__head,
+  .archive-row {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .archive-table__head span:nth-child(3),
+  .archive-table__head span:nth-child(4),
+  .archive-row__type,
+  .archive-row__year {
+    display: none;
+  }
+
+  .archive-row {
+    min-height: 7.2rem;
+  }
+
+  .archive-row:hover,
+  .archive-row:focus-within {
+    transform: translateX(0.35rem);
+  }
+
+  .archive-row__project a {
+    font-size: clamp(1.55rem, 7.3vw, 2.5rem);
+  }
+
+  .archive-row__project small {
+    display: block;
+    margin-top: 0.55rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .archive-row__links {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+
+  .github-lab {
+    min-height: 120svh;
+  }
+
+  .github-lab__eyebrow,
+  .github-lab__title,
+  .github-lab__console,
+  .github-lab__cta {
+    grid-column: 1 / 13;
+  }
+
+  .github-lab__title {
+    font-size: clamp(5rem, 23vw, 9rem);
+  }
+
+  .github-lab__title span:nth-child(2) {
+    margin-left: 8%;
+  }
+
+  .github-lab__console {
+    margin-top: 6rem;
+  }
+
+  .github-lab__console-head span:last-child {
+    display: none;
+  }
+
+  .github-lab__cta {
+    justify-self: end;
+    width: 12.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-row,
+  .github-lab__cta,
+  .github-lab__cta i {
+    transform: none !important;
+  }
+
+  .github-lab__caret {
+    animation: none;
+  }
+}

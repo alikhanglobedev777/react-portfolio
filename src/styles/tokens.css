@@ -1,0 +1,37 @@
+:root {
+  --color-background: #050505;
+  --color-surface: #0b0b0b;
+  --color-foreground: #efefe8;
+  --color-muted: #8d8d87;
+  --color-border: rgba(239, 239, 232, 0.16);
+  --color-border-strong: rgba(239, 239, 232, 0.32);
+  --color-accent: #c8ff2e;
+  --color-accent-foreground: #050505;
+
+  --font-sans: "Helvetica Neue", "Arial Narrow", Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  --page-margin: clamp(1rem, 3.25vw, 4rem);
+  --grid-gap: clamp(0.625rem, 1.2vw, 1.5rem);
+  --section-space-sm: clamp(4.5rem, 8vw, 8rem);
+  --section-space: clamp(7rem, 13vw, 13rem);
+  --section-space-lg: clamp(9rem, 18vw, 18rem);
+
+  --type-display-xl: clamp(5.5rem, 20vw, 22rem);
+  --type-display-lg: clamp(4.5rem, 14vw, 15rem);
+  --type-heading-xl: clamp(3.5rem, 9vw, 9.5rem);
+  --type-heading-lg: clamp(2.75rem, 6vw, 6.5rem);
+  --type-heading-md: clamp(1.75rem, 3vw, 3.25rem);
+  --type-body-lg: clamp(1.125rem, 1.55vw, 1.5rem);
+  --type-body: clamp(0.95rem, 1vw, 1.0625rem);
+  --type-caption: clamp(0.72rem, 0.75vw, 0.82rem);
+  --type-technical: clamp(0.6rem, 0.66vw, 0.72rem);
+
+  --z-content: 1;
+  --z-grid: 5;
+  --z-header: 100;
+  --z-transition: 300;
+  --z-cursor: 400;
+  --z-modal: 500;
+}

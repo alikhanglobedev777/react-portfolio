@@ -1,178 +1,166 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import {
-  FaLinkedinIn,
-  FaGithub,
-  FaInstagram,
-  FaWhatsapp
-} from "react-icons/fa";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { gsap } from "../animation/gsap";
+import SocialLinks from "./SocialLinks";
 import "../styles/Navbar.css";
 
-function Navbar({ activeSection = "home" }) {
+const menuItems = [
+  { number: "01", label: "INDEX", target: "home" },
+  { number: "02", label: "WORK", target: "projects" },
+  { number: "03", label: "ABOUT", target: "about" },
+  { number: "04", label: "EXPERIENCE", target: "experience" },
+  { number: "05", label: "ARCHIVE", target: "archive" },
+  { number: "06", label: "CONTACT", target: "contact" },
+];
+
+export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const menuRef = useRef(null);
+  const closeRef = useRef(null);
+  const toggleRef = useRef(null);
+  const reactionRef = useRef(null);
+  const timelineRef = useRef(null);
+  const returnFocusRef = useRef(null);
+  const navigationTimerRef = useRef(null);
 
-  const handleNavClick = (e, path, sectionId) => {
-    e.preventDefault();
-    setMenuOpen(false);
+  useLayoutEffect(() => {
+    const menu = menuRef.current;
+    if (!menu) return undefined;
 
-    navigate(path);
+    const context = gsap.context(() => {
+      timelineRef.current = gsap.timeline({ paused: true, defaults: { ease: "expo.inOut" } })
+        .set(menu, { visibility: "visible" })
+        .fromTo(menu, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.72 })
+        .fromTo(".fullscreen-menu__reaction", { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 0.38, duration: 0.55 }, "-=0.5")
+        .from(".fullscreen-menu__item a > span", { yPercent: 120, duration: 0.62, stagger: 0.055 }, "-=0.5")
+        .from(".social-links--menu .social-link", { y: 14, opacity: 0, duration: 0.38, stagger: 0.045 }, "-=0.32")
+        .from(".fullscreen-menu__close, .fullscreen-menu__meta", { opacity: 0, y: 14, duration: 0.3, stagger: 0.05 }, "-=0.3")
+        .eventCallback("onReverseComplete", () => gsap.set(menu, { visibility: "hidden" }));
+    }, menu);
 
-    // Scroll only if section exists (mainly for home page)
-    if (sectionId) {
-      setTimeout(() => {
-        const nav = document.querySelector(".navbar");
-        const navHeight = nav ? nav.offsetHeight : 70;
-        const el = document.getElementById(sectionId);
+    return () => {
+      timelineRef.current?.kill();
+      context.revert();
+    };
+  }, []);
 
-        if (el) {
-          const top =
-            el.getBoundingClientRect().top +
-            window.pageYOffset -
-            navHeight -
-            8;
+  useEffect(() => {
+    const menu = menuRef.current;
+    if (!menu || !timelineRef.current) return undefined;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-          window.scrollTo({ top, behavior: "smooth" });
+    if (menuOpen) {
+      returnFocusRef.current = document.activeElement;
+      document.body.style.overflow = "hidden";
+      menu.setAttribute("aria-hidden", "false");
+      if (reducedMotion) {
+        gsap.set(menu, { visibility: "visible", clipPath: "inset(0 0 0 0)" });
+        gsap.set(".fullscreen-menu__item a > span, .fullscreen-menu__close, .fullscreen-menu__meta", { clearProps: "all" });
+      } else {
+        timelineRef.current.play(0);
+      }
+
+      const focusTimer = window.setTimeout(() => closeRef.current?.focus(), reducedMotion ? 0 : 420);
+      const onKeyDown = (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setMenuOpen(false);
+          return;
         }
-      }, 60);
+
+        if (event.key !== "Tab") return;
+        const focusable = Array.from(menu.querySelectorAll('button, a[href]')).filter((element) => !element.hasAttribute("disabled"));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      };
+
+      document.addEventListener("keydown", onKeyDown);
+      return () => {
+        window.clearTimeout(focusTimer);
+        document.removeEventListener("keydown", onKeyDown);
+      };
     }
+
+    menu.setAttribute("aria-hidden", "true");
+    if (reducedMotion) {
+      gsap.set(menu, { visibility: "hidden", clipPath: "inset(0 0 100% 0)" });
+    } else {
+      timelineRef.current.reverse();
+    }
+    document.body.style.overflow = "";
+    returnFocusRef.current?.focus?.();
+    return undefined;
+  }, [menuOpen]);
+
+  useEffect(() => () => {
+    document.body.style.overflow = "";
+    window.clearTimeout(navigationTimerRef.current);
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleNavigation = (event, target) => {
+    event.preventDefault();
+    closeMenu();
+    window.clearTimeout(navigationTimerRef.current);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    navigationTimerRef.current = window.setTimeout(
+      () => document.getElementById(target)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" }),
+      reducedMotion ? 0 : 460,
+    );
   };
 
-  // ✅ Updated active link logic (route + section support)
-const getActiveLinkClass = (sectionId, path) => {
-  // If not on home page, use pathname to decide active link
-  if (location.pathname !== "/") {
-    return location.pathname === path ? "nav-link active" : "nav-link";
-  }
-  // On home page, use activeSection (scroll-based)
-  return sectionId === activeSection ? "nav-link active" : "nav-link";
-};
+  const reactToItem = (index) => {
+    const reaction = reactionRef.current;
+    if (!reaction) return;
+    reaction.dataset.active = String(index);
+    gsap.to(reaction, { xPercent: (index % 2 ? 3 : -3), scale: 1 + index * 0.008, duration: 0.55, ease: "power3.out" });
+  };
 
   return (
-    <nav className="navbar">
-      {/* Brand */}
-      <div className="navbar-brand">Ali Khan</div>
+    <>
+      <nav className="navbar" aria-label="Primary navigation">
+        <a className="navbar__mark" href="#home" aria-label="Ali Khan, index" data-cursor="link">AK/26</a>
+        <button ref={toggleRef} className="navbar__toggle" type="button" onClick={() => setMenuOpen(true)} aria-expanded={menuOpen} aria-controls="fullscreen-menu" data-cursor="link" data-magnetic data-magnetic-strength="0.12">
+          <span>MENU</span><span aria-hidden="true">+</span>
+        </button>
+      </nav>
 
-      {/* Hamburger */}
-      <div
-        className={`hamburger ${menuOpen ? "active" : ""}`}
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle menu"
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") setMenuOpen(!menuOpen);
-        }}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <div className="fullscreen-menu" id="fullscreen-menu" ref={menuRef} aria-hidden="true">
+        <div className="fullscreen-menu__reaction" ref={reactionRef} data-active="0" aria-hidden="true" />
+        <div className="fullscreen-menu__top">
+          <span className="technical">AK/26 — NAVIGATION</span>
+          <button ref={closeRef} className="fullscreen-menu__close" type="button" onClick={closeMenu} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
+            <span aria-hidden="true">×</span> CLOSE
+          </button>
+        </div>
+
+        <nav className="fullscreen-menu__nav" aria-label="Fullscreen navigation">
+          <ol>
+            {menuItems.map((item, index) => (
+              <li className="fullscreen-menu__item" key={item.number} onPointerEnter={() => reactToItem(index)}>
+                <a href={`#${item.target}`} onClick={(event) => handleNavigation(event, item.target)} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
+                  <span><small>{item.number}</small>{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <SocialLinks variant="menu" tabIndex={menuOpen ? 0 : -1} />
+
+        <div className="fullscreen-menu__meta technical">
+          <span>FULL-STACK ENGINEER</span>
+          <span>LAHORE / PAKISTAN</span>
+        </div>
       </div>
-
-      {/* Nav Links */}
-      <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
-        <li>
-          <a
-            href="#home"
-            className={getActiveLinkClass("home", "/")}
-            onClick={(e) => handleNavClick(e, "/", "home")}
-          >
-            Home
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#resume"
-            className={getActiveLinkClass("resume", "/resume")}
-            onClick={(e) => handleNavClick(e, "/resume", "resume")}
-          >
-            Resume
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#about"
-            className={getActiveLinkClass("about", "/about")}
-            onClick={(e) => handleNavClick(e, "/about", "about")}
-          >
-            About
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#projects"
-            className={getActiveLinkClass("projects", "/projects")}
-            onClick={(e) => handleNavClick(e, "/projects", "projects")}
-          >
-            Projects
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#blogs"
-            className={getActiveLinkClass("blogs", "/blogs")}
-            onClick={(e) => handleNavClick(e, "/blogs", "blogs")}
-          >
-            Blogs
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="#contact"
-            className={getActiveLinkClass("contact", "/contact")}
-            onClick={(e) => handleNavClick(e, "/contact", "contact")}
-          >
-            Contact
-          </a>
-        </li>
-      </ul>
-
-      {/* Social Icons */}
-      <div className="social-icons">
-        <a
-          href="https://www.linkedin.com/in/ali-khan-mern/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          <FaLinkedinIn />
-        </a>
-
-        <a
-          href="https://github.com/alikhanglobedev777"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          <FaGithub />
-        </a>
-
-        <a
-          href="https://www.instagram.com/ali.khan.295"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Instagram"
-        >
-          <FaInstagram />
-        </a>
-
-        <a
-          href="https://wa.me/923021848264"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="WhatsApp"
-        >
-          <FaWhatsapp />
-        </a>
-      </div>
-    </nav>
+    </>
   );
 }
-
-export default Navbar;

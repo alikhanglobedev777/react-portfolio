@@ -1,0 +1,227 @@
+.manifesto {
+  position: relative;
+  z-index: 4;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+}
+
+.manifesto__stage {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  padding: clamp(5.5rem, 10vh, 8rem) var(--page-margin) clamp(1.5rem, 3vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: center;
+  overflow: hidden;
+}
+
+.manifesto__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 var(--page-margin);
+  opacity: 0.13;
+  pointer-events: none;
+  background-image: linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: calc(100% / 12) 100%;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 80%, transparent);
+}
+
+.manifesto__index {
+  position: absolute;
+  top: clamp(5.5rem, 10vh, 8rem);
+  right: var(--page-margin);
+  left: var(--page-margin);
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-muted);
+}
+
+.manifesto__lead,
+.manifesto__system {
+  position: absolute;
+  right: var(--page-margin);
+  left: var(--page-margin);
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(3.8rem, 10vw, 11rem);
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: -0.08em;
+}
+
+.manifesto__lead-line,
+.manifesto__system-line {
+  display: block;
+  overflow: hidden;
+}
+
+.manifesto__lead-line > i,
+.manifesto__system-line > i {
+  display: block;
+  width: max-content;
+  color: inherit;
+  font-style: normal;
+  transform-origin: left bottom;
+  will-change: transform, opacity, filter, color;
+}
+
+.manifesto__lead-line--indent {
+  padding-left: 14%;
+}
+
+.manifesto__system {
+  font-size: clamp(4.6rem, 12.2vw, 13.5rem);
+  line-height: 0.7;
+}
+
+.manifesto__system-line--indent {
+  padding-left: 31%;
+}
+
+.manifesto__support {
+  position: absolute;
+  right: var(--page-margin);
+  bottom: clamp(4.5rem, 8vh, 7rem);
+  z-index: 3;
+  width: min(31rem, 35vw);
+  margin: 0;
+  color: #b7b7b0;
+  font-size: var(--type-body-lg);
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+
+.manifesto__disciplines {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vw, 3rem);
+  left: var(--page-margin);
+  z-index: 3;
+  display: flex;
+  gap: clamp(0.7rem, 1.5vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  color: var(--color-muted);
+  list-style: none;
+}
+
+.manifesto__disciplines li:not(:last-child)::after {
+  content: " /";
+  color: var(--color-border-strong);
+}
+
+@media (max-width: 768px) {
+  .manifesto {
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .manifesto__stage {
+    height: auto;
+    min-height: 100svh;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+    display: block;
+    overflow: hidden;
+  }
+
+  .manifesto__index {
+    top: 2rem;
+  }
+
+  .manifesto__lead,
+  .manifesto__system {
+    position: relative;
+    right: auto;
+    left: auto;
+    font-size: clamp(3.4rem, 15.5vw, 6.2rem);
+    line-height: 0.85;
+  }
+
+  .manifesto__lead {
+    font-size: clamp(2.45rem, 12.4vw, 5.2rem);
+  }
+
+  .manifesto__lead-line--indent,
+  .manifesto__system-line--indent {
+    padding-left: 0;
+  }
+
+  .manifesto__system {
+    margin-top: 8rem;
+    font-size: clamp(4.3rem, 20vw, 7.4rem);
+    line-height: 0.74;
+  }
+
+  .manifesto__support {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 82%;
+    margin: 5rem 0 0 18%;
+  }
+
+  .manifesto__disciplines {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    flex-wrap: wrap;
+    margin-top: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifesto {
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .manifesto__stage {
+    height: auto;
+    min-height: 100svh;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+    display: block;
+    overflow: visible;
+  }
+
+  .manifesto__lead,
+  .manifesto__system {
+    position: relative;
+    right: auto;
+    left: auto;
+  }
+
+  .manifesto__system {
+    margin-top: 8rem;
+  }
+
+  .manifesto__support,
+  .manifesto__disciplines {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+  }
+
+  .manifesto__support {
+    margin-top: 5rem;
+  }
+
+  .manifesto__disciplines {
+    margin-top: 4rem;
+  }
+
+  .manifesto__lead-line > i,
+  .manifesto__system-line > i,
+  .manifesto__support,
+  .manifesto__disciplines {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

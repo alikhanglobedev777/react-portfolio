@@ -1,135 +1,46 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import "../styles/Home.css";
-import profile from "../assets/profile.jpeg";
-import About from "./About";
-import Blogs from "./Blogs";
+import { useEffect } from "react";
+import { useLocation, useNavigationType } from "react-router-dom";
+import { ScrollTrigger } from "../animation/gsap";
+import EntryExperience from "../components/EntryExperience";
+import Archive from "../components/Archive";
+import Journey from "../components/Journey";
+import MotionDirector from "../components/foundation/MotionDirector";
 import Contact from "./Contact";
 import Projects from "./Projects";
-import Resume from "./Resume";
 
 export default function Home() {
   const location = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
+    const returnY = location.state?.projectReturnY;
+    if (location.pathname === "/" && navigationType === "POP" && Number.isFinite(returnY)) {
+      const timer = window.setTimeout(() => {
+        ScrollTrigger.refresh();
+        window.scrollTo(0, returnY);
+      }, 80);
+      return () => window.clearTimeout(timer);
+    }
 
-    const scrollToSection = () => {
-      let sectionId =
-        location.pathname === "/" ? "home" : location.pathname.replace("/", "");
-      if (!sectionId) sectionId = "home";
-      const el = document.getElementById(sectionId);
-      if (el) {
-        const nav = document.querySelector(".navbar");
-        const navHeight = nav ? nav.offsetHeight : 70;
-        const top =
-          el.getBoundingClientRect().top + window.pageYOffset - navHeight - 8;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    };
+    const timer = window.setTimeout(() => {
+      const routeSections = { "/resume": "experience", "/about": "about" };
+      const sectionId = location.hash
+        ? location.hash.slice(1)
+        : routeSections[location.pathname] || (location.pathname === "/" ? "home" : location.pathname.replace("/", ""));
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    }, 60);
 
-    setTimeout(scrollToSection, 60);
-  }, [location]);
+    return () => window.clearTimeout(timer);
+  }, [location, navigationType]);
 
   return (
     <>
-
-      <section id="home" className="home fade-in">
-        <div className="hero-top">
-
-          <div className="badge">
-            <span className="dot" /> Available for Freelance
-          </div>
-
-
-          <h1 className="hero-title">
-            I AM <br />
-            <span>Ali Khan</span>
-          </h1>
-        </div>
-
-
-        <div className="home-grid">
-
-          <div className="clients-box">
-            <h3>
-              Happy Clients <span className="symbol">♦</span> Fiverr{" "}
-              <span className="symbol">♦</span> Upwork
-            </h3>
-
-            <div className="divider" />
-
-            <div className="client-pics">
-              <img
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="Client 1"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/women/45.jpg"
-                alt="Client 2"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/men/14.jpg"
-                alt="Client 3"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/women/68.jpg"
-                alt="Client 4"
-              />
-            </div>
-
-            <div className="reviews">
-              ★★★★★ <span>100+ 5 Star Reviews</span>
-            </div>
-          </div>
-
-
-          <div className="profile-column">
-            <div className="profile-oval">
-              <img src={profile} alt="Ali Khan" />
-            </div>
-
-            <div className="pill pill-frontend">MERN Stack Developer</div>
-            <div className="pill pill-uiux">Software Engineer</div>
-          </div>
-
-          <div className="stats-column">
-            <div className="stat">
-              <div className="stat-num">5+</div>
-              <div className="stat-label">Months of Experience</div>
-            </div>
-            <div className="stat">
-              <div className="stat-num">10+</div>
-              <div className="stat-label">Projects Completed</div>
-            </div>
-            <div className="stat">
-              <div className="stat-num">3.00</div>
-              <div className="stat-label">CGPA</div>
-            </div>
-            <div className="stat">
-              <div className="stat-num">5+</div>
-              <div className="stat-label">Publications</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="resume" className="fade-in">
-        <Resume variant="embedded" />
-      </section>
-
-      <section id="about" className="fade-in">
-        <About />
-      </section>
-
-      <section id="projects" className="fade-in">
-        <Projects />
-      </section>
-      <section id="blogs" className="fade-in">
-        <Blogs />
-      </section>
-      <section id="contact" className="fade-in">
-        <Contact />
-      </section>
+      <EntryExperience />
+      <Projects />
+      <Archive />
+      <Journey />
+      <section id="contact"><Contact /></section>
+      <MotionDirector />
     </>
   );
 }

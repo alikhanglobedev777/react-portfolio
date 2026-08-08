@@ -1,0 +1,187 @@
+.social-links {
+  display: flex;
+}
+
+.social-link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) 1.25rem;
+  gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  align-items: center;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  will-change: transform;
+}
+
+.social-link::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.08);
+  transform-origin: left;
+  transition: transform 520ms cubic-bezier(.2, .75, .2, 1), background-color 220ms ease;
+}
+
+.social-link__icon {
+  display: grid;
+  width: 1.2rem;
+  height: 1.2rem;
+  place-items: center;
+  color: var(--color-muted);
+  transition: color 220ms ease;
+}
+
+.social-link__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.social-link__label,
+.social-link__arrow {
+  display: block;
+  will-change: transform;
+}
+
+.social-link__arrow {
+  display: grid;
+  width: 1.5rem;
+  place-items: center;
+  justify-self: end;
+  font-style: normal;
+  line-height: 1;
+  transition: transform 420ms cubic-bezier(.2, .75, .2, 1), color 220ms ease;
+}
+
+.social-link:hover::before,
+.social-link:focus-visible::before {
+  transform: scaleX(1);
+  background: var(--color-accent);
+}
+
+.social-link:hover .social-link__label,
+.social-link:focus-visible .social-link__label,
+.social-link:hover .social-link__arrow,
+.social-link:focus-visible .social-link__arrow {
+  color: var(--color-accent);
+}
+
+.social-link:hover .social-link__label,
+.social-link:focus-visible .social-link__label {
+  transform: translateX(0.4rem);
+}
+
+.social-link:hover .social-link__arrow,
+.social-link:focus-visible .social-link__arrow {
+  transform: translate(0.35rem, -0.35rem);
+}
+
+.social-links--menu {
+  position: absolute;
+  z-index: 3;
+  right: var(--page-margin);
+  bottom: clamp(3.6rem, 6vh, 5.5rem);
+  width: min(38vw, 33rem);
+  flex-direction: column;
+}
+
+.social-links--menu .social-link {
+  min-height: clamp(2.6rem, 5vh, 4rem);
+  border-top: 1px solid var(--color-border);
+  font-size: clamp(0.85rem, 1.3vw, 1.2rem);
+}
+
+.social-links--menu .social-link::before {
+  background: var(--color-accent);
+}
+
+.social-links--menu .social-link__icon {
+  color: var(--color-muted);
+}
+
+.social-links--menu .social-link:hover .social-link__label,
+.social-links--menu .social-link:focus-visible .social-link__label,
+.social-links--menu .social-link:hover .social-link__arrow,
+.social-links--menu .social-link:focus-visible .social-link__arrow {
+  color: var(--color-accent);
+}
+
+.social-links--contact {
+  flex-direction: column;
+  width: 100%;
+}
+
+.social-links--contact .social-link {
+  min-height: clamp(4.75rem, 7vw, 7rem);
+  border-top: 1px solid var(--color-border);
+}
+
+.social-links--contact .social-link:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.social-links--contact .social-link__label {
+  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.07em;
+}
+
+.social-links--contact .social-link__arrow {
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+}
+
+.social-links--contact .social-link__icon {
+  width: clamp(1.1rem, 1.5vw, 1.4rem);
+  height: clamp(1.1rem, 1.5vw, 1.4rem);
+}
+
+.social-links--footer {
+  flex-direction: column;
+  width: min(100%, 38rem);
+}
+
+.social-links--footer .social-link {
+  min-height: 3.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.social-links--footer .social-link:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (max-width: 700px) {
+  .social-links--menu {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    margin-bottom: 0.8rem;
+  }
+
+  .social-links--menu .social-link {
+    min-height: 2.5rem;
+    font-size: 0.75rem;
+  }
+
+  .social-links--contact .social-link {
+    min-height: 4.75rem;
+  }
+
+  .social-links--contact .social-link__label {
+    font-size: clamp(1.85rem, 8.5vw, 3rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-link,
+  .social-link__label,
+  .social-link__arrow {
+    transform: none !important;
+  }
+}

@@ -1,168 +1,190 @@
-import React, { useState } from "react";
-import { FaHeart, FaExternalLinkAlt, FaCode, FaGlobe, FaCloudSun, FaExchangeAlt, FaShoppingCart, FaWarehouse, FaShieldAlt, FaBriefcase } from "react-icons/fa";
+import { useCallback, useRef } from "react";
+import { gsap } from "../animation/gsap";
+import ProjectArtwork from "../components/projects/ProjectArtwork";
+import { projects } from "../data/projects";
+import { useGSAPContext } from "../hooks/useGSAPContext";
+import { useProjectTransition } from "../transitions/useProjectTransition";
 import "../styles/projects.css";
 
-function Projects() {
-  const [expanded, setExpanded] = useState(null);
+export default function Projects() {
+  const sectionRef = useRef(null);
+  const { openProject } = useProjectTransition();
 
-  const handleToggle = (id) => {
-    setExpanded(expanded === id ? null : id);
+  const handleProjectOpen = (event, project) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const sourcePanel = event.currentTarget.closest(".system-project");
+    openProject({
+      project,
+      sourcePanel,
+      sourceMedia: sourcePanel?.querySelector(".system-project__media"),
+      sourceTitle: sourcePanel?.querySelector(".system-project__title i"),
+    });
   };
 
-  const projectData = [
-    {
-      id: 1,
-      title: "AAA Service Directory",
-      description:
-        "AAA is a MERN stack service marketplace where clients can find and connect with local service providers. I implemented JWT-based authentication, role-based login/signup, and RESTful APIs for secure user and business management. Service providers can manage their profiles, and clients can explore services with a clean, responsive UI",
-      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: "https://aaa-7zb1.vercel.app/home",
-      icon: <FaBriefcase />,
-      category: "Full-Stack",
-    },
-    {
-      id: 2,
-      title: "Portfolio",
-      description:
-        "A modern and fully responsive portfolio website built using React and Vite, showcasing my skills, projects, and experience as a MERN Stack Developer. It includes smooth navigation, reusable components, and dynamic routing with react-router-dom. The design features a clean UI, interactive animations, and optimized performance for a seamless user experience. Integrated real project links, social media icons, and contact section for easy communication",
-      image: "https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png",
-      liveDemo: null,
-      icon: <FaCode />,
-      category: "Frontend",
-    },
-    {
-      id: 3,
-      title: "Flag Web",
-      description:
-        "FlagWeb is an interactive web application where users can explore flags and basic information of all countries around the world. It fetches real-time global data using a public API and displays country flags in a clean card UI. Users can search any country instantly and view details such as its capital, region, and population.",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIrgOY6-0xuufy5n-1EKWTAbV3u9j3tBXcYQ&s",
-      liveDemo: "https://flagweb.vercel.app/",
-      icon: <FaGlobe />,
-      category: "API Integration",
-    },
-    {
-      id: 4,
-      title: "Weatherly App",
-      description:
-        "A weather dashboard built with React that fetches live weather data using a third-party API. Users can search by city name and see current weather conditions, temperature, and other forecast details in a responsive layout.",
-      image: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
-      liveDemo: "https://weather-app-one-mu-83.vercel.app/",
-      icon: <FaCloudSun />,
-      category: "Utility",
-    },
-    {
-      id: 5,
-      title: "Currency Converter",
-      description:
-        "A currency conversion tool that allows users to convert amounts between multiple global currencies using live exchange rates. The app provides a simple UI and reliable conversion calculations.",
-      image: "https://cdn-icons-png.flaticon.com/512/682/682601.png",
-      liveDemo: "https://currency-converterapp.vercel.app/",
-      icon: <FaExchangeAlt />,
-      category: "Utility",
-    },
-    {
-      id: 6,
-      title: "VTEO AI (Contract Management System)",
-      description:
-        "AI-powered contract management platform with document workflows, backend services, and modern frontend UI.",
-      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: null,
-      icon: <FaBriefcase />,
-      category: "Full-Stack",
-    },
-    {
-      id: 7,
-      title: "JWT Authentication System",
-      description: "Secure authentication system with role-based access and protected routes.",
-      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: "https://aaa-7zb1.vercel.app/home",
-      icon: <FaShieldAlt />,
-      category: "Backend",
-    },
-    {
-      id: 8,
-      title: "Sales Management System",
-      description:
-        "Full-stack system for managing sales, products, and reports with dynamic dashboards.",
-      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: "https://currency-converterapp.vercel.app/",
-      icon: <FaShoppingCart />,
-      category: "Full-Stack",
-    },
-    {
-      id: 9,
-      title: "Inventory Management System",
-      description:
-        "Inventory tracking system with CRUD operations and database integration.",
-      image: "https://cdn-icons-png.flaticon.com/512/5968/5968292.png",
-      liveDemo: "https://flagweb.vercel.app/",
-      icon: <FaWarehouse />,
-      category: "Full-Stack",
-    },
-    {
-      id: 10,
-      title: "Weatherly App (Key Project)",
-      description:
-        "Weather app built using React, Axios, and a third-party API with Context API for state management.",
-      image: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
-      liveDemo: "https://weather-app-one-mu-83.vercel.app/",
-      icon: <FaCloudSun />,
-      category: "Frontend",
-    },
-  ];
+  const setupMotion = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-  const totalProjects = projectData.length;
+    const track = section.querySelector(".systems-track");
+    const panels = gsap.utils.toArray(".system-project", section);
+    const progressFill = section.querySelector(".systems-progress__fill");
+    const progressCurrent = section.querySelector(".systems-progress__current");
+    const media = gsap.matchMedia();
+
+    media.add("(min-width: 769px)", () => {
+      let activeIndex = -1;
+      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      const scrollDuration = () => Math.min(
+        distance(),
+        Math.max(window.innerHeight * 2, window.innerWidth * 1.5),
+      );
+
+      const horizontal = gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".systems-pin",
+          start: "top top",
+          end: () => "+=" + scrollDuration(),
+          pin: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          refreshPriority: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            progressFill.style.transform = "scaleX(" + self.progress + ")";
+            const nextIndex = Math.min(projects.length - 1, Math.round(self.progress * (projects.length - 1)));
+            if (nextIndex !== activeIndex) {
+              activeIndex = nextIndex;
+              progressCurrent.textContent = String(nextIndex + 1).padStart(2, "0");
+              section.style.setProperty("--systems-accent", projects[nextIndex].accent);
+              gsap.to(section, { backgroundColor: projects[nextIndex].shell, duration: 0.5, overwrite: true });
+            }
+          },
+        },
+      });
+
+      const mediaFrames = panels.map((panel) => panel.querySelector(".system-project__media"));
+      const artworks = panels.map((panel) => panel.querySelector(".project-artwork"));
+      const titles = panels.map((panel) => panel.querySelector(".system-project__title i"));
+      const copies = panels.map((panel) => panel.querySelector(".system-project__copy"));
+      const metas = panels.map((panel) => panel.querySelector(".system-project__meta"));
+
+      gsap.set(mediaFrames, { clearProps: "clipPath,opacity,visibility" });
+      gsap.set(artworks, { clearProps: "opacity,filter,transform,visibility" });
+      gsap.set([...titles, ...copies, ...metas], {
+        clearProps: "opacity,filter,transform,visibility",
+      });
+
+      const listeners = [];
+
+      panels.forEach((panel) => {
+        const artwork = panel.querySelector(".project-artwork");
+        const mediaFrame = panel.querySelector(".system-project__media");
+        const title = panel.querySelector(".system-project__title i");
+
+        const onMove = (event) => {
+          const bounds = mediaFrame.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+          const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+          gsap.to(artwork, { rotationX: y * -1.6, rotationY: x * 1.6, scale: 1.05, transformPerspective: 1000, duration: 0.45, overwrite: "auto" });
+          gsap.to(title, { x: x * 12, y: y * 8, duration: 0.45, overwrite: "auto" });
+        };
+        const onLeave = () => {
+          gsap.to(artwork, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.55, overwrite: "auto" });
+          gsap.to(title, { x: 0, y: 0, duration: 0.55, overwrite: "auto" });
+        };
+
+        mediaFrame.addEventListener("pointermove", onMove, { passive: true });
+        mediaFrame.addEventListener("pointerleave", onLeave);
+        listeners.push(() => {
+          mediaFrame.removeEventListener("pointermove", onMove);
+          mediaFrame.removeEventListener("pointerleave", onLeave);
+        });
+      });
+
+      return () => {
+        horizontal.kill();
+        listeners.forEach((remove) => remove());
+      };
+    });
+
+    media.add("(max-width: 768px)", () => {
+      gsap.set(track, { x: 0 });
+      gsap.set(panels, { clearProps: "opacity,filter,transform,visibility" });
+      gsap.set(section.querySelectorAll(".project-artwork, .system-project__title i, .system-project__copy, .system-project__meta"), {
+        clearProps: "opacity,filter,transform,visibility",
+      });
+    });
+
+    return () => media.revert();
+  }, []);
+
+  useGSAPContext(sectionRef, setupMotion);
 
   return (
-    <section className="projects-section" id="projects">
-      <h2 className="section-title">My Projects</h2>
-      <p className="projects-count">Total Projects: {totalProjects}</p>
+    <section className="selected-systems" id="projects" ref={sectionRef} aria-labelledby="systems-title">
+      <header className="systems-header page-shell grid-12">
+        <p className="systems-header__index technical">02 / FEATURED WORK</p>
+        <h2 className="systems-header__title" id="systems-title">
+          <span>SELECTED</span><span>/ SYSTEMS</span>
+        </h2>
+        <p className="systems-header__copy">Selected interfaces, applications, and full-stack systems built from verified project work.</p>
+      </header>
 
-      <div className="projects-grid">
-        {projectData.map((project) => {
-          const isExpanded = expanded === project.id;
-          const shortDesc =
-            project.description.slice(0, 130) + "...";
+      <div className="systems-pin">
+        <div className="systems-progress technical" aria-hidden="true">
+          <span className="systems-progress__current">01</span>
+          <span className="systems-progress__track"><i className="systems-progress__fill" /></span>
+          <span>{String(projects.length).padStart(2, "0")}</span>
+        </div>
 
-          return (
-            <div className="project-card" key={project.id}>
-              <img
-                src={project.image}
-                alt={project.title}
-                className="project-img"
-              />
-              <h3>{project.title}</h3>
-              <p className="project-description">
-                {isExpanded ? project.description : shortDesc}
-              </p>
-
-              <button
-                className="read-more-btn"
-                onClick={() => handleToggle(project.id)}
-              >
-                {isExpanded ? "Read Less" : "Read More"}
-              </button>
+        <div className="systems-track">
+          {projects.map((project, index) => (
+            <article
+              className="system-project"
+              key={project.id}
+              style={{ "--project-accent": project.accent, "--project-panel": project.panel }}
+              data-shell={project.shell}
+            >
+              <div className="system-project__meta technical">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{project.category}</span>
+                {project.year ? <span>{project.year}</span> : <span aria-hidden="true">&mdash;</span>}
+              </div>
 
               <a
-                href={project.liveDemo || "#"}
-                target={project.liveDemo ? "_blank" : undefined}
-                rel={project.liveDemo ? "noopener noreferrer" : undefined}
-                className="btn-demo"
-                aria-disabled={!project.liveDemo}
-                onClick={(event) => {
-                  if (!project.liveDemo) {
-                    event.preventDefault();
-                  }
-                }}
+                className="system-project__media"
+                href={`/projects/${project.id}`}
+                onClick={(event) => handleProjectOpen(event, project)}
+                data-cursor="view"
+                aria-label={`View ${project.name} case study`}
               >
-                {project.liveDemo ? "Live Demo" : "Demo Soon"}
+                <ProjectArtwork project={project} index={index} total={projects.length} />
               </a>
-            </div>
-          );
-        })}
+
+              <div className="system-project__copy">
+                <h3 className="system-project__title"><span><i>{project.name}</i></span></h3>
+                <p className="system-project__description">{project.description}</p>
+                <ul className="system-project__technology technical" aria-label={project.name + " technologies"}>
+                  {project.technologies.map((technology) => <li key={technology}>{technology}</li>)}
+                </ul>
+                <a
+                  className="system-project__link technical"
+                  href={`/projects/${project.id}`}
+                  onClick={(event) => handleProjectOpen(event, project)}
+                  data-cursor="view"
+                  data-magnetic
+                  data-magnetic-strength="0.12"
+                >
+                  VIEW CASE STUDY <span aria-hidden="true" data-magnetic-arrow>&nearr;</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-
-export default Projects;

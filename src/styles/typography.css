@@ -1,0 +1,64 @@
+.display-xl {
+  margin: 0;
+  font-size: var(--type-display-xl);
+  font-weight: 500;
+  line-height: 0.72;
+  letter-spacing: -0.095em;
+}
+
+.display-lg {
+  margin: 0;
+  font-size: var(--type-display-lg);
+  font-weight: 500;
+  line-height: 0.78;
+  letter-spacing: -0.085em;
+}
+
+.heading-xl {
+  margin: 0;
+  font-size: var(--type-heading-xl);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.07em;
+}
+
+.heading-lg {
+  margin: 0;
+  font-size: var(--type-heading-lg);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.06em;
+}
+
+.heading-md {
+  margin: 0;
+  font-size: var(--type-heading-md);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.body-lg {
+  font-size: var(--type-body-lg);
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  font-size: var(--type-body);
+  line-height: 1.6;
+}
+
+.caption {
+  font-size: var(--type-caption);
+  line-height: 1.5;
+}
+
+.technical,
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--type-technical);
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

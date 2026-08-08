@@ -1,180 +1,245 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import profile from "../assets/profile.jpeg";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { gsap } from "../animation/gsap";
+import SocialLinks from "../components/SocialLinks";
+import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/Contact.css";
 
-const Contact = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: ""
-  });
-  const [loading, setLoading] = useState(false);
+const emptyForm = { name: "", email: "", subject: "", message: "", website: "" };
 
-  React.useEffect(() => {
-    if (!isOpen) return;
+export default function Contact() {
+  const rootRef = useRef(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [status, setStatus] = useState("idle");
+  const [feedback, setFeedback] = useState("");
+  const submittingRef = useRef(false);
+  const resetTimerRef = useRef(null);
+  const requestControllerRef = useRef(null);
 
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") setIsOpen(false);
-    };
+  const setupMotion = useCallback(() => {
+    const root = rootRef.current;
+    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-    document.addEventListener("keydown", onKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const media = gsap.matchMedia();
 
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isOpen]);
+    media.add("(min-width: 769px)", () => {
+      const titleLines = root.querySelectorAll(".contact-title span");
+      const headerMeta = root.querySelectorAll(".contact-system__index, .contact-system__prompt");
+      const formIntro = root.querySelector(".contact-form-intro");
+      const formStage = root.querySelector(".contact-form-stage");
+      const alternate = root.querySelector(".contact-alternate");
+      const footer = document.querySelector(".footer");
+
+      const entrance = gsap.timeline({
+        scrollTrigger: { trigger: root, start: "top 83%", end: "top 22%", scrub: 0.58 },
+      })
+        .fromTo(titleLines, {
+          yPercent: (index) => (index % 2 ? -108 : 108),
+          clipPath: "inset(0 0 100% 0)",
+          filter: "blur(12px)",
+        }, {
+          yPercent: 0,
+          clipPath: "inset(0 0 0% 0)",
+          filter: "blur(0px)",
+          stagger: 0.075,
+          ease: "none",
+        }, 0)
+        .fromTo(headerMeta, { y: 24, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, ease: "none" }, 0.18)
+        .fromTo(formIntro, { y: 38, opacity: 0 }, { y: 0, opacity: 1, ease: "none" }, 0.42)
+        .fromTo(formStage, {
+          y: 54,
+          opacity: 0,
+          clipPath: "inset(0 0 18% 0)",
+        }, {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          ease: "none",
+        }, 0.46)
+        .fromTo(alternate, { y: 30, opacity: 0 }, { y: 0, opacity: 1, ease: "none" }, 0.64);
+
+      let exit;
+      if (footer) {
+        exit = gsap.timeline({
+          scrollTrigger: { trigger: footer, start: "top 96%", end: "top 34%", scrub: 0.6 },
+        })
+          .to(titleLines, {
+            xPercent: (index) => (index % 2 ? 5 : -5),
+            opacity: 0.18,
+            filter: "blur(5px)",
+            ease: "none",
+          }, 0)
+          .to(formStage, { y: -42, scale: 0.985, opacity: 0.28, transformOrigin: "center top", ease: "none" }, 0)
+          .to([formIntro, alternate], { y: -24, opacity: 0.16, ease: "none" }, 0);
+      }
+
+      return () => {
+        entrance.kill();
+        exit?.kill();
+      };
+    });
+
+    media.add("(max-width: 768px)", () => {
+      const reveal = gsap.from(root.querySelectorAll(".contact-title span, .contact-form-intro, .contact-form-stage"), {
+        y: 34,
+        opacity: 0,
+        filter: "blur(6px)",
+        duration: 0.75,
+        stagger: 0.06,
+        ease: "power3.out",
+        scrollTrigger: { trigger: root, start: "top 84%", once: true },
+      });
+      return () => reveal.kill();
+    });
+
+    return () => media.revert();
+  }, []);
+
+  useGSAPContext(rootRef, setupMotion);
+
+  useEffect(() => () => {
+    window.clearTimeout(resetTimerRef.current);
+    requestControllerRef.current?.abort();
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((current) => ({ ...current, [name]: value }));
+    if (status === "error") {
+      setStatus("focus");
+      setFeedback("");
+    }
   };
 
-  const sendEmail = async (event) => {
+  const handleFocus = () => {
+    if (!submittingRef.current && status !== "success") setStatus("focus");
+  };
+
+  const handleBlur = () => {
+    if (status === "focus") setStatus("idle");
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    if (submittingRef.current) return;
+
+    submittingRef.current = true;
+    setStatus("submitting");
+    setFeedback("");
+    const requestController = new AbortController();
+    requestControllerRef.current = requestController;
 
     try {
-      const subject = encodeURIComponent(formData.subject);
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
-      );
-
-      window.location.href = `mailto:ak.alikhan.5911@gmail.com?subject=${subject}&body=${body}`;
-      toast.success("Message draft opened in your email app.");
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: ""
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        signal: requestController.signal,
       });
-      setIsOpen(false);
+
+      let result = null;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
+      }
+
+      if (!response.ok) throw new Error(result?.message || "Unable to send your message right now.");
+
+      setFormData(emptyForm);
+      setStatus("success");
+      setFeedback("Message received. I will get back to you soon.");
+      resetTimerRef.current = window.setTimeout(() => {
+        setStatus("idle");
+        setFeedback("");
+      }, 3200);
     } catch (error) {
-      console.log("Mail action failed:", error);
-      toast.error("Failed to open your email app. Try again.");
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setStatus("error");
+      setFeedback(error instanceof Error ? error.message : "Unable to send your message right now.");
     } finally {
-      setLoading(false);
+      submittingRef.current = false;
+      if (requestControllerRef.current === requestController) requestControllerRef.current = null;
     }
   };
 
   return (
-    <div className="contact-container">
-      <ToastContainer position="top-center" autoClose={2000} />
+    <div className="contact-container" data-form-state={status} ref={rootRef}>
+      <div className="contact-system page-shell">
+        <header className="contact-system__header grid-12">
+          <p className="contact-system__index technical">07 / CONTACT</p>
+          <p className="contact-system__prompt technical">HAVE A PROJECT?</p>
+          <h2 className="contact-title" aria-label="Let's build something.">
+            <span>LET&apos;S</span><span>BUILD</span><span>SOMETHING.</span>
+          </h2>
+        </header>
 
-      <div className="contact-card">
-        <img src={profile} alt="profile" className="contact-avatar" />
-        <h2 className="contact-title">If you have any project in mind</h2>
-        <p className="contact-sub">
-          Let&apos;s work together to bring your vision to life.
-        </p>
+        <div className="contact-form-layout grid-12">
+          <div className="contact-form-intro">
+            <p>Tell me what you are building, what needs to work, and where I can help.</p>
+            <span className="technical">INTERFACE / BACKEND / DATABASE / DELIVERY</span>
+          </div>
 
-        <div className="contact-quicklinks">
-          <a className="contact-link" href="mailto:ak.alikhan.5911@gmail.com">Email</a>
-          <a className="contact-link" href="tel:+923021848264">Call</a>
-          <a
-            className="contact-link"
-            href="https://wa.me/923021848264"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            WhatsApp
-          </a>
-        </div>
+          <div className="contact-form-stage">
+            <div className="contact-form-stage__top technical">
+              <span>PROJECT INQUIRY</span>
+              <span>{status.toUpperCase()}</span>
+            </div>
 
-        <button className="contact-btn" onClick={() => setIsOpen(true)}>
-          Hire Me
-        </button>
-      </div>
-
-      {isOpen && (
-        <div
-          className="modal-overlay"
-          onClick={() => setIsOpen(false)}
-          role="presentation"
-        >
-          <div
-            className="modal"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="contact-modal-title"
-          >
-            <h3 className="modal-title" id="contact-modal-title">Let&apos;s Work Together</h3>
-
-            <form className="contact-form" onSubmit={sendEmail}>
+            <form className="contact-form" onSubmit={handleSubmit} aria-label="Project inquiry form" aria-busy={status === "submitting"}>
               <div className="field">
-                <label htmlFor="contact-name">Name</label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  autoComplete="name"
-                />
+                <label htmlFor="contact-name"><span>01</span> NAME</label>
+                <input id="contact-name" name="name" type="text" value={formData.name} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} autoComplete="name" minLength="2" maxLength="100" required placeholder="YOUR NAME" disabled={status === "submitting" || status === "success"} />
               </div>
 
               <div className="field">
-                <label htmlFor="contact-email">Email</label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  autoComplete="email"
-                />
+                <label htmlFor="contact-email"><span>02</span> EMAIL</label>
+                <input id="contact-email" name="email" type="email" value={formData.email} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} autoComplete="email" maxLength="254" required placeholder="YOU@COMPANY.COM" disabled={status === "submitting" || status === "success"} />
               </div>
 
               <div className="field">
-                <label htmlFor="contact-subject">Subject</label>
-                <input
-                  id="contact-subject"
-                  type="text"
-                  name="subject"
-                  placeholder="Subject"
-                  required
-                  value={formData.subject}
-                  onChange={handleChange}
-                />
+                <label htmlFor="contact-subject"><span>03</span> SUBJECT</label>
+                <input id="contact-subject" name="subject" type="text" value={formData.subject} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} minLength="3" maxLength="150" required placeholder="PROJECT / PRODUCT / SYSTEM" disabled={status === "submitting" || status === "success"} />
               </div>
 
-              <div className="field">
-                <label htmlFor="contact-message">Message</label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  placeholder="Your Message"
-                  rows="4"
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                />
+              <div className="field field--message">
+                <label htmlFor="contact-message"><span>04</span> MESSAGE</label>
+                <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} minLength="10" maxLength="5000" required rows="6" placeholder="TELL ME ABOUT THE WORK" disabled={status === "submitting" || status === "success"} />
               </div>
 
-              <button type="submit" className="submit-btn" disabled={loading}>
-                {loading ? "Opening..." : "Send Message"}
+              <div className="contact-honeypot" aria-hidden="true">
+                <label htmlFor="contact-website">Website</label>
+                <input id="contact-website" name="website" type="text" value={formData.website} onChange={handleChange} tabIndex="-1" autoComplete="off" />
+              </div>
+
+              <button className="contact-submit" type="submit" disabled={status === "submitting" || status === "success"} data-cursor="contact" data-magnetic data-magnetic-strength="0.1">
+                <span>{status === "submitting" ? "TRANSMITTING" : "SEND INQUIRY"}</span>
+                <i aria-hidden="true">{status === "submitting" ? "•••" : "↗"}</i>
               </button>
+
+              <p
+                className={`contact-feedback contact-feedback--${status}`}
+                role={status === "error" ? "alert" : "status"}
+                aria-live={status === "error" ? "assertive" : "polite"}
+              >
+                {status === "submitting" ? "Sending your inquiry." : status === "error" ? feedback : ""}
+              </p>
             </form>
 
-            <button className="close-btn" onClick={() => setIsOpen(false)}>
-              x
-            </button>
+            {status === "success" && (
+              <div className="contact-success" role="status" aria-live="polite">
+                <span className="technical">DELIVERY / CONFIRMED</span>
+                <strong><i>MESSAGE</i><i>RECEIVED.</i></strong>
+                <p>{feedback}</p>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <div className="contact-alternate">
+          <p className="technical">ALTERNATE CONTACT</p>
+          <SocialLinks variant="contact" includeEmail />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Contact;
+}

@@ -1,85 +1,80 @@
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at top right, #1a1033, #0b0015);
-  color: white;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .page-transition,
-  .fade-in,
-  .fade-in.visible {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
+html {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  scroll-behavior: auto;
 }
 
-
-::-webkit-scrollbar {
-  width: 0px; 
-  background: transparent;
-}
-
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0d0d0d;
-}
-::-webkit-scrollbar-thumb {
-  background: #a855f7;
-  border-radius: 10px;
-}
-/* Prevent horizontal scrolling completely */
-html, body {
-  width: 100%;
-  max-width: 100%;
+body {
+  min-width: 320px;
+  margin: 0;
   overflow-x: hidden;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Page transition animations */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+}
+
 .page-transition {
-  animation: pageFadeIn 0.45s ease-out;
+  position: relative;
+  z-index: var(--z-content);
 }
 
-@keyframes pageFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Section reveal animation */
-.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.fade-in.visible {
-  animation: fadeIn 0.55s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

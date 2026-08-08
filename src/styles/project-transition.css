@@ -1,0 +1,51 @@
+.project-transition-layer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-transition) + 40);
+  visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.project-transition-layer__visual {
+  position: fixed;
+  overflow: hidden;
+  background: var(--project-panel);
+  will-change: left, top, width, height, clip-path, transform;
+}
+
+.project-transition-layer__visual .project-artwork {
+  transform: none !important;
+}
+
+.project-transition-layer__title {
+  position: fixed;
+  z-index: 3;
+  overflow: hidden;
+  color: var(--color-foreground);
+  font-weight: 500;
+  white-space: nowrap;
+  will-change: left, top, width, font-size, transform, opacity;
+}
+
+html[data-project-transition="active"],
+html[data-project-transition="active"] body {
+  overscroll-behavior: none;
+}
+
+html[data-project-transition="active"] .case-study-hero {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .project-transition-layer__title {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-transition-layer__visual,
+  .project-transition-layer__title {
+    display: none;
+  }
+}

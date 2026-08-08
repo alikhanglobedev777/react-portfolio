@@ -1,83 +1,228 @@
-/* ================= FOOTER ================= */
 .footer {
-  background: #120a23;
-  padding: 40px 20px 20px;
-  color: #ccc;
-  margin-top: 60px;
-  font-family: "Poppins", sans-serif;
-  text-align: center;
+  --footer-ink: var(--color-foreground);
+  --footer-rule: var(--color-border);
+  position: relative;
+  z-index: 6;
+  min-height: 118svh;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem) var(--page-margin) 1.5rem;
+  overflow: hidden;
+  border-top: 1px solid var(--footer-rule);
+  background:
+    radial-gradient(42rem circle at 68% 22%, rgba(200, 255, 46, 0.055), transparent 68%),
+    #080808;
+  color: var(--footer-ink);
+  transform-origin: bottom;
+  will-change: transform, clip-path;
 }
 
-.footer-container {
-  max-width: 1100px;
-  margin: 0 auto;
+.footer-pointer-field {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background: radial-gradient(28rem circle at var(--footer-pointer-x, 50%) var(--footer-pointer-y, 45%), rgba(200, 255, 46, 0.09), transparent 70%);
+  pointer-events: none;
+}
+
+.footer-meta,
+.footer-title,
+.footer-actions,
+.footer-mantra {
+  position: relative;
+  z-index: 2;
+}
+
+.footer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--footer-rule);
+}
+
+.footer-title {
+  margin: clamp(5rem, 10vh, 9rem) 0 clamp(5rem, 10vh, 9rem);
+  font-size: clamp(9rem, 28vw, 31rem);
+  font-weight: 500;
+  line-height: 0.55;
+  letter-spacing: -0.115em;
+  will-change: transform;
+}
+
+.footer-title__line {
+  display: block;
+  overflow: hidden;
+}
+
+.footer-title__line > span {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  will-change: transform, filter;
+}
+
+.footer-title__line:last-child > span {
+  margin-left: auto;
+  padding-right: 0.08em;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--footer-ink);
+}
+
+.footer-actions {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: end;
+}
+
+.footer-socials {
+  grid-column: 1 / 7;
+}
+
+.footer-socials > p {
+  margin: 0 0 1rem;
+  color: var(--color-muted);
+}
+
+.footer .social-links--footer {
+  width: 100%;
+}
+
+.footer .social-links--footer .social-link {
+  grid-template-columns: 1.5rem 1fr 1.25rem;
+  min-height: clamp(4rem, 6.5vw, 6rem);
+  border-color: var(--footer-rule);
+  color: var(--footer-ink);
+  font-size: clamp(1.15rem, 2.2vw, 2.2rem);
+  letter-spacing: -0.035em;
+}
+
+.footer .social-links--footer .social-link__icon {
+  color: var(--color-muted);
+}
+
+.footer .social-links--footer .social-link::before {
+  background: var(--color-accent);
+}
+
+.footer .social-links--footer .social-link:hover .social-link__label,
+.footer .social-links--footer .social-link:focus-visible .social-link__label,
+.footer .social-links--footer .social-link:hover .social-link__arrow,
+.footer .social-links--footer .social-link:focus-visible .social-link__arrow {
+  color: var(--color-accent);
+}
+
+.footer .social-links--footer .social-link:focus-visible {
+  outline-color: var(--color-accent);
+}
+
+.footer-back-to-top {
+  grid-column: 9 / 13;
+  justify-self: end;
+  width: clamp(12rem, 19vw, 19rem);
+  aspect-ratio: 1;
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* Brand */
-.footer-brand {
-  font-size: 26px;
-  font-weight: 700;
-  color: #fff;
-}
-
-/* Links */
-.footer-links {
-  list-style: none;
-  display: flex;
-  gap: 25px;
-  margin: 0;
-  padding: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.footer-link {
-  color: #ccc;
-  text-decoration: none;
-  font-size: 15px;
-  transition: 0.3s;
-}
-
-.footer-link:hover,
-.footer-link.active {
-  color: #c084fc;
-}
-
-/* Social icons */
-.footer-socials {
-  display: flex;
-  gap: 18px;
-  justify-content: center;
-}
-
-.footer-socials a {
-  border: 1px solid #7a4dff;
+  justify-content: space-between;
+  border: 1px solid var(--footer-ink);
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  color: white;
-  transition: 0.3s;
+  color: var(--footer-ink);
+  font-size: clamp(1.1rem, 1.7vw, 1.55rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-decoration: none;
+  transition: color 260ms ease, background-color 260ms ease;
+  will-change: transform;
 }
 
-.footer-socials a:hover {
-  background: #7a4dff;
-  color: white;
+.footer-back-to-top i {
+  align-self: flex-end;
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-style: normal;
+  will-change: transform;
 }
-  
-/* Bottom */
-.footer-bottom {
-  text-align: center;
-  margin-top: 25px;
-  font-size: 14px;
-  color: #888;
-  border-top: 1px solid #222;
-  padding-top: 15px;
+
+.footer-back-to-top:hover,
+.footer-back-to-top:focus-visible {
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
+  outline-color: var(--color-accent);
+}
+
+.footer-back-to-top:hover i,
+.footer-back-to-top:focus-visible i {
+  transform: translateY(-0.5rem);
+}
+
+.footer-mantra {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: clamp(6rem, 12vw, 12rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--footer-rule);
+  font-size: clamp(2.7rem, 7.4vw, 8rem);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.07em;
+}
+
+.footer-mantra i {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.25em;
+  font-style: normal;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    min-height: 105svh;
+  }
+
+  .footer-meta {
+    align-items: flex-start;
+    font-size: 0.55rem;
+  }
+
+  .footer-title {
+    margin-block: 6rem;
+    font-size: clamp(8rem, 42vw, 15rem);
+    line-height: 0.58;
+  }
+
+  .footer-title__line:last-child > span {
+    margin-left: 0;
+    -webkit-text-stroke-width: 1px;
+  }
+
+  .footer-actions {
+    display: block;
+  }
+
+  .footer-back-to-top {
+    width: 11.5rem;
+    margin: 5rem 0 0 auto;
+  }
+
+  .footer-mantra {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    font-size: clamp(2.7rem, 14vw, 5.2rem);
+  }
+
+  .footer-mantra i {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer,
+  .footer-title,
+  .footer-title__line > span,
+  .footer-back-to-top {
+    transform: none !important;
+    filter: none !important;
+  }
 }
