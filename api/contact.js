@@ -1,7 +1,15 @@
 import nodemailer from "nodemailer";
 
-const ALLOWED_FIELDS = new Set(["name", "email", "subject", "message", "website"]);
-const MAX_PAYLOAD_BYTES = 12_000;
+const TEXT_FIELDS = new Set(["name", "email", "subject", "message", "website"]);
+const ALLOWED_FIELDS = new Set([...TEXT_FIELDS, "attachment"]);
+const MAX_PAYLOAD_BYTES = 3_200_000;
+const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024;
+const ATTACHMENT_TYPES = new Map([
+  [".pdf", "application/pdf"],
+  [".doc", "application/msword"],
+  [".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+  [".txt", "text/plain"],
+]);
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 
@@ -68,7 +76,7 @@ function validatePayload(input) {
   if (payloadSize > MAX_PAYLOAD_BYTES) return { error: "Request payload is too large." };
 
   const fields = {};
-  for (const field of ALLOWED_FIELDS) {
+  for (const field of TEXT_FIELDS) {
     const value = input[field] ?? "";
     if (typeof value !== "string") return { error: `Invalid ${field}.` };
     fields[field] = value.trim();
@@ -88,7 +96,67 @@ function validatePayload(input) {
     return { error: "Message must be between 10 and 5,000 characters." };
   }
 
-  return { data: fields };
+  const attachment = validateAttachment(input.attachment);
+  if (attachment.error) return { error: attachment.error };
+
+  return { data: { ...fields, attachment: attachment.data } };
+}
+
+function validateAttachment(value) {
+  if (value == null || value === "") return { data: null };
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return { error: "Invalid attachment." };
+  }
+
+  const allowedKeys = new Set(["name", "type", "size", "data"]);
+  if (Object.keys(value).some((key) => !allowedKeys.has(key))) {
+    return { error: "Invalid attachment." };
+  }
+
+  const { name, type = "", size, data } = value;
+  if (typeof name !== "string" || typeof type !== "string" || typeof data !== "string" || !Number.isInteger(size)) {
+    return { error: "Invalid attachment." };
+  }
+
+  const trimmedName = name.trim();
+  if (!trimmedName || trimmedName.length > 120 || /[\/\\\0-\x1f]/.test(trimmedName)) {
+    return { error: "Invalid attachment filename." };
+  }
+
+  const dotIndex = trimmedName.lastIndexOf(".");
+  const extension = dotIndex >= 0 ? trimmedName.slice(dotIndex).toLowerCase() : "";
+  const contentType = ATTACHMENT_TYPES.get(extension);
+  if (!contentType) {
+    return { error: "Attachment must be a PDF, DOC, DOCX, or TXT file." };
+  }
+
+  if (size < 1 || size > MAX_ATTACHMENT_BYTES) {
+    return { error: "Attachment must be 2 MB or smaller." };
+  }
+
+  if (!data || data.length > 2_900_000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
+    return { error: "Invalid attachment data." };
+  }
+
+  let buffer;
+  try {
+    buffer = Buffer.from(data, "base64");
+  } catch {
+    return { error: "Invalid attachment data." };
+  }
+
+  if (buffer.length !== size || buffer.length > MAX_ATTACHMENT_BYTES) {
+    return { error: "Invalid attachment size." };
+  }
+
+  return {
+    data: {
+      filename: trimmedName,
+      contentType,
+      size: buffer.length,
+      buffer,
+    },
+  };
 }
 
 function escapeHtml(value) {
@@ -159,7 +227,7 @@ export default async function handler(request, response) {
 
   try {
     const mail = getMailConfiguration();
-    const { name, email, subject, message } = validation.data;
+    const { name, email, subject, message, attachment } = validation.data;
     const receivedAt = new Date().toISOString();
     const safe = {
       name: escapeHtml(name),
@@ -167,6 +235,7 @@ export default async function handler(request, response) {
       subject: escapeHtml(subject),
       message: escapeHtml(message).replaceAll("\n", "<br>"),
       receivedAt: escapeHtml(receivedAt),
+      attachmentName: attachment ? escapeHtml(attachment.filename) : null,
     };
 
     const transporter = nodemailer.createTransport({
@@ -188,6 +257,7 @@ export default async function handler(request, response) {
         `EMAIL\n${email}`,
         `SUBJECT\n${subject}`,
         `MESSAGE\n${message}`,
+        attachment ? `ATTACHMENT\n${attachment.filename} (${Math.ceil(attachment.size / 1024)} KB)` : "ATTACHMENT\nNone",
         `DATE/TIME\n${receivedAt}`,
       ].join("\n\n"),
       html: `
@@ -197,9 +267,15 @@ export default async function handler(request, response) {
           <p><strong>EMAIL</strong><br>${safe.email}</p>
           <p><strong>SUBJECT</strong><br>${safe.subject}</p>
           <p><strong>MESSAGE</strong><br>${safe.message}</p>
+          <p><strong>ATTACHMENT</strong><br>${safe.attachmentName ?? "None"}</p>
           <p><strong>DATE/TIME</strong><br>${safe.receivedAt}</p>
         </div>
       `,
+      attachments: attachment ? [{
+        filename: attachment.filename,
+        content: attachment.buffer,
+        contentType: attachment.contentType,
+      }] : [],
     });
 
     respond(response, 200, { ok: true, message: "Message received." });

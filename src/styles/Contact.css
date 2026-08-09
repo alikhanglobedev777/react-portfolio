@@ -498,3 +498,127 @@
     font-size: clamp(4rem, 20vw, 5.4rem);
   }
 }
+
+/* Optional inquiry document attachment */
+.contact-file {
+  min-width: 0;
+}
+
+.contact-file__input {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.contact-file__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.contact-file__choose,
+.contact-file__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.2rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+  background: rgba(255, 255, 255, 0.015);
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 0.8vw, 0.86rem);
+  font-weight: 750;
+  letter-spacing: 0.065em;
+  cursor: pointer;
+  transition: border-color 220ms ease, color 220ms ease, background-color 220ms ease;
+}
+
+.contact-file__choose {
+  width: min(18rem, 100%);
+  padding: 0 0.9rem;
+}
+
+.contact-file__choose i {
+  color: var(--color-accent);
+  font-size: 1.2rem;
+  font-style: normal;
+}
+
+.contact-file__remove {
+  min-width: 6.4rem;
+  padding: 0 0.8rem;
+}
+
+.contact-file__choose:hover,
+.contact-file__choose:focus-within,
+.contact-file__remove:hover,
+.contact-file__remove:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.contact-file__remove:disabled,
+.contact-file__input:disabled + .contact-file__controls .contact-file__choose {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.contact-file__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-technical);
+  letter-spacing: 0.045em;
+}
+
+.contact-file__meta strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-foreground);
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-file__meta span {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .contact-file__controls,
+  .contact-file__meta {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contact-file__choose,
+  .contact-file__remove {
+    width: 100%;
+    min-height: 3.6rem;
+  }
+
+  .contact-file__meta {
+    gap: 0.35rem;
+  }
+
+  .contact-file__meta strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-file__meta span {
+    text-align: left;
+  }
+}

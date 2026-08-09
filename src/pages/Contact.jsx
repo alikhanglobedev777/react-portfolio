@@ -6,12 +6,39 @@ import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/Contact.css";
 
 const emptyForm = { name: "", email: "", subject: "", message: "", website: "" };
+const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024;
+const ALLOWED_ATTACHMENT_EXTENSIONS = new Set(["pdf", "doc", "docx", "txt"]);
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Unable to read the selected file."));
+    reader.onload = () => {
+      const result = typeof reader.result === "string" ? reader.result : "";
+      const separatorIndex = result.indexOf(",");
+      if (separatorIndex < 0) {
+        reject(new Error("Unable to read the selected file."));
+        return;
+      }
+      resolve(result.slice(separatorIndex + 1));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.ceil(bytes / 1024)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
 
 export default function Contact() {
   const rootRef = useRef(null);
   const [formData, setFormData] = useState(emptyForm);
   const [status, setStatus] = useState("idle");
   const [feedback, setFeedback] = useState("");
+  const [attachmentFile, setAttachmentFile] = useState(null);
+  const fileInputRef = useRef(null);
   const submittingRef = useRef(false);
   const resetTimerRef = useRef(null);
   const requestControllerRef = useRef(null);
@@ -110,6 +137,45 @@ export default function Contact() {
     }
   };
 
+
+  const handleAttachmentChange = (event) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) {
+      setAttachmentFile(null);
+      return;
+    }
+
+    const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+    if (!ALLOWED_ATTACHMENT_EXTENSIONS.has(extension)) {
+      event.target.value = "";
+      setAttachmentFile(null);
+      setStatus("error");
+      setFeedback("Attach a PDF, DOC, DOCX, or TXT file.");
+      return;
+    }
+
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      event.target.value = "";
+      setAttachmentFile(null);
+      setStatus("error");
+      setFeedback("Attachment must be 2 MB or smaller.");
+      return;
+    }
+
+    setAttachmentFile(file);
+    setFeedback("");
+    if (status === "error") setStatus("focus");
+  };
+
+  const removeAttachment = () => {
+    setAttachmentFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (status === "error") {
+      setStatus("idle");
+      setFeedback("");
+    }
+  };
+
   const handleFocus = () => {
     if (!submittingRef.current && status !== "success") setStatus("focus");
   };
@@ -129,10 +195,20 @@ export default function Contact() {
     requestControllerRef.current = requestController;
 
     try {
+      let attachment = null;
+      if (attachmentFile) {
+        attachment = {
+          name: attachmentFile.name,
+          type: attachmentFile.type,
+          size: attachmentFile.size,
+          data: await fileToBase64(attachmentFile),
+        };
+      }
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, attachment }),
         signal: requestController.signal,
       });
 
@@ -146,6 +222,8 @@ export default function Contact() {
       if (!response.ok) throw new Error(result?.message || "Unable to send your message right now.");
 
       setFormData(emptyForm);
+      setAttachmentFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setStatus("success");
       setFeedback("Message received. I will get back to you soon.");
       resetTimerRef.current = window.setTimeout(() => {
@@ -204,6 +282,46 @@ export default function Contact() {
               <div className="field field--message">
                 <label htmlFor="contact-message"><span>04</span> MESSAGE</label>
                 <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} minLength="10" maxLength="5000" required rows="6" placeholder="TELL ME ABOUT THE WORK" disabled={status === "submitting" || status === "success"} />
+              </div>
+
+              <div className="field field--attachment">
+                <label htmlFor="contact-attachment"><span>05</span> FILE</label>
+                <div className="contact-file">
+                  <input
+                    ref={fileInputRef}
+                    className="contact-file__input"
+                    id="contact-attachment"
+                    name="attachment"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                    onChange={handleAttachmentChange}
+                    disabled={status === "submitting" || status === "success"}
+                  />
+                  <div className="contact-file__controls">
+                    <label className="contact-file__choose" htmlFor="contact-attachment" data-cursor="link">
+                      <span>{attachmentFile ? "REPLACE FILE" : "CHOOSE FILE"}</span>
+                      <i aria-hidden="true">+</i>
+                    </label>
+                    {attachmentFile && (
+                      <button className="contact-file__remove" type="button" onClick={removeAttachment} disabled={status === "submitting" || status === "success"}>
+                        REMOVE
+                      </button>
+                    )}
+                  </div>
+                  <div className="contact-file__meta" aria-live="polite">
+                    {attachmentFile ? (
+                      <>
+                        <strong>{attachmentFile.name}</strong>
+                        <span>{formatFileSize(attachmentFile.size)}</span>
+                      </>
+                    ) : (
+                      <>
+                        <strong>OPTIONAL DOCUMENT</strong>
+                        <span>PDF / DOC / DOCX / TXT · MAX 2 MB</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div className="contact-honeypot" aria-hidden="true">

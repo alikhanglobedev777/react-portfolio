@@ -56,7 +56,7 @@ test("rejects non-JSON and oversized payloads", async () => {
   const oversizedResponse = createResponse();
   await handler(createRequest({
     headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.15" },
-    body: { ...createRequest().body, message: "x".repeat(12_001) },
+    body: { ...createRequest().body, message: "x".repeat(3_300_000) },
   }), oversizedResponse);
   assert.equal(oversizedResponse.statusCode, 400);
   assert.equal(oversizedResponse.payload.message, "Request payload is too large.");
@@ -69,6 +69,41 @@ test("rejects header injection attempts", async () => {
     body: { ...createRequest().body, subject: "Inquiry\r\nBcc: attacker@example.com" },
   }), response);
   assert.equal(response.statusCode, 400);
+});
+
+test("rejects unsupported and oversized attachments", async () => {
+  const unsupportedResponse = createResponse();
+  await handler(createRequest({
+    headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.17" },
+    body: {
+      ...createRequest().body,
+      attachment: {
+        name: "payload.exe",
+        type: "application/octet-stream",
+        size: 4,
+        data: Buffer.from("test").toString("base64"),
+      },
+    },
+  }), unsupportedResponse);
+  assert.equal(unsupportedResponse.statusCode, 400);
+  assert.match(unsupportedResponse.payload.message, /PDF, DOC, DOCX, or TXT/);
+
+  const oversizedResponse = createResponse();
+  const oversized = Buffer.alloc((2 * 1024 * 1024) + 1, 1);
+  await handler(createRequest({
+    headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.18" },
+    body: {
+      ...createRequest().body,
+      attachment: {
+        name: "brief.pdf",
+        type: "application/pdf",
+        size: oversized.length,
+        data: oversized.toString("base64"),
+      },
+    },
+  }), oversizedResponse);
+  assert.equal(oversizedResponse.statusCode, 400);
+  assert.equal(oversizedResponse.payload.message, "Attachment must be 2 MB or smaller.");
 });
 
 test("returns 429 after the per-instance request threshold", async () => {
@@ -107,7 +142,16 @@ test("sends validated mail with fixed from, visitor replyTo, and escaped HTML", 
     const response = createResponse();
     await handler(createRequest({
       headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.13" },
-      body: { ...createRequest().body, message: "Build <script>alert('x')</script> safely." },
+      body: {
+        ...createRequest().body,
+        message: "Build <script>alert('x')</script> safely.",
+        attachment: {
+          name: "project-brief.pdf",
+          type: "application/pdf",
+          size: 8,
+          data: Buffer.from("pdf-test").toString("base64"),
+        },
+      },
     }), response);
 
     assert.equal(response.statusCode, 200);
@@ -118,6 +162,10 @@ test("sends validated mail with fixed from, visitor replyTo, and escaped HTML", 
     assert.match(sentMessages[0].subject, /^Portfolio Inquiry — /);
     assert.doesNotMatch(sentMessages[0].html, /<script>/);
     assert.match(sentMessages[0].html, /&lt;script&gt;/);
+    assert.equal(sentMessages[0].attachments.length, 1);
+    assert.equal(sentMessages[0].attachments[0].filename, "project-brief.pdf");
+    assert.equal(sentMessages[0].attachments[0].contentType, "application/pdf");
+    assert.equal(sentMessages[0].attachments[0].content.toString("utf8"), "pdf-test");
   } finally {
     nodemailer.createTransport = previousCreateTransport;
     for (const [key, value] of Object.entries(previousEnvironment)) {
