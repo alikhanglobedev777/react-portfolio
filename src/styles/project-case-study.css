@@ -140,14 +140,24 @@
   grid-column: 9 / 13;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  min-height: 3.6rem;
   margin-top: clamp(4rem, 8vw, 8rem);
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--project-accent);
-  color: var(--color-foreground);
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--project-accent);
+  background: var(--project-accent);
+  color: #050505;
   font-size: clamp(0.78rem, 0.84vw, 0.92rem);
-  font-weight: 750;
+  font-weight: 780;
   letter-spacing: 0.055em;
   text-decoration: none;
+  transition: color 220ms ease, background-color 220ms ease, transform 220ms ease;
+}
+
+.case-study-overview__live:hover,
+.case-study-overview__live:focus-visible {
+  background: transparent;
+  color: var(--project-accent);
 }
 
 @media (max-width: 768px) {

@@ -171,7 +171,7 @@ export default function Archive() {
               <span className="archive-row__type technical" role="cell">{project.type}</span>
               <span className="archive-row__year technical" role="cell">{project.year}</span>
               <span className="archive-row__links technical" role="cell">
-                {project.projectUrl && <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" data-cursor="view">VIEW</a>}
+                {project.projectUrl && <a className="archive-row__live" href={project.projectUrl} target="_blank" rel="noopener noreferrer" data-cursor="view" aria-label={`Open ${project.name} live site in a new tab`}>LIVE <i aria-hidden="true">&nearr;</i></a>}
                 <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer" data-cursor="code">CODE <i aria-hidden="true">&nearr;</i></a>
               </span>
             </div>

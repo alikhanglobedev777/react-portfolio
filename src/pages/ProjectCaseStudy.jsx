@@ -89,7 +89,7 @@ export default function ProjectCaseStudy() {
 
         {project.url?.startsWith("http") && (
           <a className="case-study-overview__live technical" href={project.url} target="_blank" rel="noopener noreferrer" data-cursor="view" aria-label={`Visit ${project.name} live project in a new tab`}>
-            VISIT LIVE PROJECT <span aria-hidden="true">&nearr;</span>
+            VISIT LIVE SITE <span aria-hidden="true">&nearr;</span>
           </a>
         )}
       </section>

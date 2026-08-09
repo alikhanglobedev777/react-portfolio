@@ -81,7 +81,7 @@ export const projects = [
     description: "A motion-led React portfolio combining editorial typography, structured content, cinematic transitions, smooth scrolling, and an interactive 3D hero system.",
     technologies: ["React", "Vite", "GSAP", "Lenis", "Three.js", "React Three Fiber"],
     year: "2026",
-    url: "/#home",
+    url: "https://alikhanportfolio.vercel.app/",
     variant: "portfolio",
     mark: "AK",
     visualLabel: "IDENTITY / MOTION / ENGINEERING",

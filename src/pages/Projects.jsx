@@ -157,7 +157,7 @@ export default function Projects() {
         const mediaFrame = panel.querySelector(".system-project__media");
         const artwork = panel.querySelector(".project-artwork");
         const details = panel.querySelectorAll(
-          ".system-project__meta, .system-project__title i, .system-project__description, .system-project__technology, .system-project__link",
+          ".system-project__meta, .system-project__title i, .system-project__description, .system-project__technology, .system-project__actions",
         );
 
         mobileAnimations.push(createMobileReveal({
@@ -276,16 +276,34 @@ export default function Projects() {
                 <ul className="system-project__technology technical" aria-label={project.name + " technologies"}>
                   {project.technologies.map((technology) => <li key={technology}>{technology}</li>)}
                 </ul>
-                <a
-                  className="system-project__link technical"
-                  href={`/projects/${project.id}`}
-                  onClick={(event) => handleProjectOpen(event, project)}
-                  data-cursor="view"
-                  data-magnetic
-                  data-magnetic-strength="0.12"
-                >
-                  VIEW CASE STUDY <span aria-hidden="true" data-magnetic-arrow>&nearr;</span>
-                </a>
+                <div className="system-project__actions" aria-label={`${project.name} project actions`}>
+                  <a
+                    className="system-project__link system-project__link--case technical"
+                    href={`/projects/${project.id}`}
+                    onClick={(event) => handleProjectOpen(event, project)}
+                    data-cursor="view"
+                    data-magnetic
+                    data-magnetic-strength="0.12"
+                  >
+                    CASE STUDY <span aria-hidden="true" data-magnetic-arrow>&nearr;</span>
+                  </a>
+
+                  {project.url?.startsWith("http") && (
+                    <a
+                      className="system-project__link system-project__link--live technical"
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cursor="link"
+                      data-magnetic
+                      data-magnetic-strength="0.1"
+                      aria-label={`Visit ${project.name} live site in a new tab`}
+                    >
+                      <span className="system-project__live-label"><i aria-hidden="true" /> LIVE SITE</span>
+                      <span aria-hidden="true" data-magnetic-arrow>&nearr;</span>
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           ))}
