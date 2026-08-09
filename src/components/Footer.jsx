@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
 import { gsap } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import { scrollToSection } from "../animation/scrollController";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import { profile } from "../data/profile";
@@ -14,14 +15,30 @@ export default function Footer() {
 
     const title = footer.querySelector(".footer-title");
     const backToTop = footer.querySelector(".footer-back-to-top");
-    const entrance = gsap.timeline({
-      scrollTrigger: { trigger: footer, start: "top 94%", end: "top 32%", scrub: 0.62 },
-    })
-      .fromTo(footer, { y: 120, clipPath: "inset(12% 0 0 0)" }, { y: 0, clipPath: "inset(0% 0 0 0)", ease: "none" }, 0)
-      .from(".footer-title__line span", { yPercent: 112, filter: "blur(12px)", stagger: 0.08, ease: "none" }, 0.14)
-      .from(".footer-meta > *, .footer-contact-hub, .footer-back-to-top, .footer-mantra span", { y: 28, opacity: 0, stagger: 0.045, ease: "none" }, 0.35);
-
+    const media = gsap.matchMedia();
     const listeners = [];
+
+    media.add("(min-width: 769px)", () => {
+      const entrance = gsap.timeline({
+        scrollTrigger: { trigger: footer, start: "top 94%", end: "top 32%", scrub: 0.62 },
+      })
+        .fromTo(footer, { y: 120, clipPath: "inset(12% 0 0 0)" }, { y: 0, clipPath: "inset(0% 0 0 0)", ease: "none" }, 0)
+        .from(".footer-title__line span", { yPercent: 112, filter: "blur(12px)", stagger: 0.08, ease: "none" }, 0.14)
+        .from(".footer-meta > *, .footer-contact-hub, .footer-back-to-top, .footer-mantra span", { y: 28, opacity: 0, stagger: 0.045, ease: "none" }, 0.35);
+      return () => entrance.kill();
+    });
+
+    media.add("(max-width: 768px)", () => {
+      const reveal = createMobileReveal({
+        trigger: footer,
+        targets: footer.querySelectorAll(".footer-meta > *, .footer-title__line span, .footer-contact-hub, .footer-back-to-top, .footer-mantra span"),
+        start: "top 94%",
+        from: { y: 28, opacity: 0, filter: "blur(6px)" },
+        duration: 0.7,
+        stagger: 0.045,
+      });
+      return () => reveal.kill();
+    });
 
     if (window.matchMedia("(pointer: fine)").matches) {
       const moveTitleX = gsap.quickTo(title, "x", { duration: 0.7, ease: "power3.out" });
@@ -66,7 +83,7 @@ export default function Footer() {
     }
 
     return () => {
-      entrance.kill();
+      media.revert();
       listeners.forEach((remove) => remove());
     };
   }, []);

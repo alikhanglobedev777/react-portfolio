@@ -71,7 +71,7 @@ export function ProjectTransitionProvider({ children }) {
       width: Math.max(titleRect.width, 280),
       fontSize: titleStyle.fontSize,
       lineHeight: titleStyle.lineHeight,
-      opacity: mobile ? 0 : 1,
+      opacity: 1,
     });
 
     if (reducedMotion) {
@@ -138,7 +138,7 @@ export function ProjectTransitionProvider({ children }) {
         fontSize: destinationSize,
         lineHeight: 0.78,
         letterSpacing: "-0.075em",
-        duration: 1.12,
+        duration: mobile ? 0.72 : 1.12,
       }, 0.06);
   }, [finishTransition, navigate]);
 

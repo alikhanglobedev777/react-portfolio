@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
 import { gsap } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import { profile } from "../data/profile";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/ResumeDownload.css";
@@ -45,14 +46,13 @@ export default function ResumeDownload() {
     });
 
     media.add("(max-width: 768px)", () => {
-      const reveal = gsap.from(root.querySelectorAll(".resume-download__title span, .resume-download__document, .resume-download__copy, .resume-download__actions"), {
-        y: 30,
-        opacity: 0,
-        filter: "blur(6px)",
+      const reveal = createMobileReveal({
+        trigger: root,
+        targets: root.querySelectorAll(".resume-download__index, .resume-download__title span, .resume-download__document, .resume-download__copy, .resume-download__actions"),
+        start: "top 92%",
+        from: { y: 28, opacity: 0, filter: "blur(6px)" },
         duration: 0.7,
-        stagger: 0.055,
-        ease: "power3.out",
-        scrollTrigger: { trigger: root, start: "top 86%", once: true },
+        stagger: 0.05,
       });
       return () => reveal.kill();
     });

@@ -8,6 +8,22 @@ export function useSmoothScroll() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const desktopViewport = window.matchMedia("(min-width: 769px)");
     let stopSmoothScroll;
+    let mobileRefreshFrame = null;
+    let lastViewportWidth = window.visualViewport?.width || window.innerWidth;
+
+    const refreshMobileLayout = () => {
+      if (desktopViewport.matches) return;
+      const nextWidth = window.visualViewport?.width || window.innerWidth;
+      // Ignore address-bar height changes; only a meaningful width/orientation
+      // change needs a full ScrollTrigger recalculation on touch devices.
+      if (Math.abs(nextWidth - lastViewportWidth) < 2) return;
+      lastViewportWidth = nextWidth;
+      if (mobileRefreshFrame !== null) window.cancelAnimationFrame(mobileRefreshFrame);
+      mobileRefreshFrame = window.requestAnimationFrame(() => {
+        mobileRefreshFrame = null;
+        ScrollTrigger.refresh();
+      });
+    };
 
     const syncSmoothScroll = () => {
       stopSmoothScroll?.();
@@ -49,11 +65,24 @@ export function useSmoothScroll() {
 
     reducedMotion.addEventListener("change", syncSmoothScroll);
     desktopViewport.addEventListener("change", syncSmoothScroll);
+    window.addEventListener("orientationchange", refreshMobileLayout);
+    window.addEventListener("resize", refreshMobileLayout, { passive: true });
+    window.visualViewport?.addEventListener("resize", refreshMobileLayout, { passive: true });
     syncSmoothScroll();
+
+    // Fonts can change line wrapping after first paint, especially on mobile.
+    // Refresh once they settle so section starts match the final layout.
+    document.fonts?.ready?.then(() => {
+      if (!desktopViewport.matches) ScrollTrigger.refresh();
+    });
 
     return () => {
       reducedMotion.removeEventListener("change", syncSmoothScroll);
       desktopViewport.removeEventListener("change", syncSmoothScroll);
+      window.removeEventListener("orientationchange", refreshMobileLayout);
+      window.removeEventListener("resize", refreshMobileLayout);
+      window.visualViewport?.removeEventListener("resize", refreshMobileLayout);
+      if (mobileRefreshFrame !== null) window.cancelAnimationFrame(mobileRefreshFrame);
       stopSmoothScroll?.();
     };
   }, []);

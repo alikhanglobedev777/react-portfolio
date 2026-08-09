@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import { gsap } from "../animation/gsap";
+import { gsap, ScrollTrigger } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import { experiences, profile, stackRows } from "../data/profile";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/Journey.css";
@@ -106,16 +107,87 @@ export default function Journey() {
     });
 
     media.add("(max-width: 768px)", () => {
-      const sections = gsap.utils.toArray(".journey-experience, .journey-about", root);
-      const reveals = sections.map((section) => gsap.from(section.querySelectorAll(".experience-entry, .about-statement__line span, .about-copy, .about-meta"), {
-        y: 38,
-        opacity: 0,
-        duration: 0.75,
-        stagger: 0.06,
-        ease: "power3.out",
-        scrollTrigger: { trigger: section, start: "top 84%", once: true },
+      const stack = root.querySelector(".journey-stack");
+      const experience = root.querySelector(".journey-experience");
+      const about = root.querySelector(".journey-about");
+      const lineFill = root.querySelector(".experience-timeline__fill");
+      const experienceItems = gsap.utils.toArray(".experience-entry", root);
+      const animations = [];
+      const triggers = [];
+
+      // Keep every mobile section visible by default and apply the hidden
+      // starting state only when its trigger actually enters the viewport.
+      // This prevents the Experience section from getting stuck blank after a
+      // direct menu jump, browser chrome resize, or ScrollTrigger refresh.
+      animations.push(createMobileReveal({
+        trigger: stack,
+        targets: root.querySelectorAll(".stack-header__index, .stack-header__character, .stack-header > p:last-child, .stack-marquee"),
+        start: "top 92%",
+        from: { y: 26, opacity: 0, filter: "blur(6px)" },
+        duration: 0.7,
+        stagger: 0.035,
       }));
-      return () => reveals.forEach((reveal) => reveal.kill());
+
+      animations.push(createMobileReveal({
+        trigger: experience,
+        targets: root.querySelectorAll(".experience-heading > p, .experience-heading__line span"),
+        start: "top 92%",
+        from: { y: 30, opacity: 0, filter: "blur(7px)" },
+        duration: 0.72,
+        stagger: 0.06,
+      }));
+
+      const lineTween = gsap.fromTo(lineFill, { scaleY: 0 }, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: root.querySelector(".experience-timeline"),
+          start: "top 90%",
+          end: "bottom 72%",
+          scrub: 0.35,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      experienceItems.forEach((item) => {
+        animations.push(createMobileReveal({
+          trigger: item,
+          targets: item.querySelectorAll(
+            ".experience-entry__number, .experience-entry__year, .experience-entry__company, .experience-entry__role, .experience-entry__dates, .experience-entry__responsibilities li",
+          ),
+          start: "top 91%",
+          from: { y: 24, opacity: 0, filter: "blur(5px)" },
+          duration: 0.62,
+          stagger: 0.04,
+        }));
+
+        const setActive = () => item.classList.add("is-active");
+        triggers.push(ScrollTrigger.create({
+          trigger: item,
+          start: "top 72%",
+          end: "bottom 36%",
+          onEnter: setActive,
+          onEnterBack: setActive,
+          onLeave: () => item.classList.remove("is-active"),
+          onLeaveBack: () => item.classList.remove("is-active"),
+        }));
+      });
+
+      animations.push(createMobileReveal({
+        trigger: about,
+        targets: root.querySelectorAll(".about-index, .about-statement__line span, .about-copy, .about-meta"),
+        start: "top 91%",
+        from: { y: 28, opacity: 0, filter: "blur(6px)" },
+        duration: 0.72,
+        stagger: 0.055,
+      }));
+
+      return () => {
+        animations.forEach((animation) => animation.kill());
+        triggers.forEach((trigger) => trigger.kill());
+        lineTween.scrollTrigger?.kill();
+        lineTween.kill();
+      };
     });
 
     return () => media.revert();

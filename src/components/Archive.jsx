@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
 import { gsap } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import { archiveCategories, archiveProjects } from "../data/archive";
 import { githubProfileUrl } from "../data/socials";
 import { useGSAPContext } from "../hooks/useGSAPContext";
@@ -17,21 +18,64 @@ export default function Archive() {
     const preview = root.querySelector(".archive-preview");
     const previewImage = preview?.querySelector("img");
     const listeners = [];
+    const media = gsap.matchMedia();
 
-    const rowsTimeline = gsap.from(rows, {
-      y: 34,
-      opacity: 0,
-      duration: 0.7,
-      stagger: 0.055,
-      ease: "power3.out",
-      scrollTrigger: { trigger: ".archive-table", start: "top 82%", once: true },
+    media.add("(min-width: 769px)", () => {
+      const rowsTimeline = gsap.from(rows, {
+        y: 34,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.055,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".archive-table", start: "top 82%", once: true },
+      });
+
+      const labTimeline = gsap.timeline({
+        scrollTrigger: { trigger: ".github-lab", start: "top 76%", once: true },
+      })
+        .from(".github-lab__title span", { yPercent: 110, filter: "blur(8px)", duration: 0.85, stagger: 0.08, ease: "expo.out" })
+        .from(".github-lab__console, .github-lab__cta", { y: 32, opacity: 0, duration: 0.7, stagger: 0.1, ease: "power3.out" }, "-=0.42");
+
+      return () => {
+        rowsTimeline.kill();
+        labTimeline.kill();
+      };
     });
 
-    const labTimeline = gsap.timeline({
-      scrollTrigger: { trigger: ".github-lab", start: "top 76%", once: true },
-    })
-      .from(".github-lab__title span", { yPercent: 110, filter: "blur(8px)", duration: 0.85, stagger: 0.08, ease: "expo.out" })
-      .from(".github-lab__console, .github-lab__cta", { y: 32, opacity: 0, duration: 0.7, stagger: 0.1, ease: "power3.out" }, "-=0.42");
+    media.add("(max-width: 768px)", () => {
+      const animations = [
+        createMobileReveal({
+          trigger: root.querySelector(".archive-header"),
+          targets: root.querySelectorAll(".archive-header__index, .archive-header__title, .archive-header__copy"),
+          start: "top 92%",
+          from: { y: 30, opacity: 0, filter: "blur(7px)" },
+          duration: 0.72,
+          stagger: 0.06,
+        }),
+      ];
+
+      rows.forEach((row) => {
+        animations.push(createMobileReveal({
+          trigger: row,
+          targets: row,
+          start: "top 94%",
+          from: { y: 22, opacity: 0, filter: "blur(4px)" },
+          duration: 0.58,
+          stagger: 0,
+        }));
+      });
+
+      animations.push(createMobileReveal({
+        trigger: root.querySelector(".github-lab"),
+        targets: root.querySelectorAll(".github-lab__eyebrow, .github-lab__title span, .github-lab__console, .github-lab__cta"),
+        start: "top 90%",
+        from: { y: 28, opacity: 0, filter: "blur(6px)" },
+        duration: 0.7,
+        stagger: 0.055,
+      }));
+
+      return () => animations.forEach((animation) => animation.kill());
+    });
 
     if (preview && previewImage && window.matchMedia("(min-width: 769px) and (pointer: fine)").matches) {
       const moveX = gsap.quickTo(preview, "x", { duration: 0.35, ease: "power3.out" });
@@ -60,7 +104,7 @@ export default function Archive() {
       });
     }
 
-    if (cta && window.matchMedia("(pointer: fine)").matches) {
+    if (cta && window.matchMedia("(min-width: 769px) and (pointer: fine)").matches) {
       const onMove = (event) => {
         const rect = cta.getBoundingClientRect();
         const x = (event.clientX - rect.left - rect.width / 2) * 0.16;
@@ -81,8 +125,7 @@ export default function Archive() {
     }
 
     return () => {
-      rowsTimeline.kill();
-      labTimeline.kill();
+      media.revert();
       listeners.forEach((remove) => remove());
     };
   }, []);

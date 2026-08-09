@@ -99,19 +99,34 @@ export default function MotionDirector() {
       });
 
       media.add("(max-width: 768px)", () => {
-        const targets = [
-          document.querySelector(".archive-header__title"),
-          document.querySelector(".stack-header__word"),
-        ].filter(Boolean);
-        const reveals = targets.map((target) => gsap.from(target, {
-          y: 44,
-          opacity: 0,
-          filter: "blur(7px)",
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: { trigger: target, start: "top 88%", once: true },
-        }));
-        return () => reveals.forEach((reveal) => reveal.kill());
+        // Section-local reveals stay inside each component. The director only
+        // owns a lightweight hand-off so mobile still feels continuous without
+        // pre-hiding any content or pinning the viewport.
+        const stack = document.querySelector(".journey-stack");
+        const labWords = document.querySelectorAll(".github-lab__title span");
+        const grid = document.querySelector(".effect-grid");
+        if (!stack || labWords.length === 0) return undefined;
+
+        const handoff = gsap.timeline({
+          scrollTrigger: {
+            trigger: stack,
+            start: "top 98%",
+            end: "top 70%",
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(labWords, {
+            xPercent: (index) => (index % 2 ? 3 : -3),
+            opacity: 0.34,
+            filter: "blur(2px)",
+            stagger: 0.025,
+            ease: "none",
+          }, 0)
+          .fromTo(stack, { backgroundColor: "#080808" }, { backgroundColor: "#090909", ease: "none" }, 0);
+
+        if (grid) handoff.to(grid, { opacity: 0.14, ease: "none" }, 0);
+        return () => handoff.kill();
       });
 
       return () => media.revert();

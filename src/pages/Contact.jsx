@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import SocialLinks from "../components/SocialLinks";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import "../styles/Contact.css";
@@ -79,14 +80,13 @@ export default function Contact() {
     });
 
     media.add("(max-width: 768px)", () => {
-      const reveal = gsap.from(root.querySelectorAll(".contact-title span, .contact-form-intro, .contact-form-stage"), {
-        y: 34,
-        opacity: 0,
-        filter: "blur(6px)",
-        duration: 0.75,
-        stagger: 0.06,
-        ease: "power3.out",
-        scrollTrigger: { trigger: root, start: "top 84%", once: true },
+      const reveal = createMobileReveal({
+        trigger: root,
+        targets: root.querySelectorAll(".contact-system__index, .contact-system__prompt, .contact-title span, .contact-form-intro, .contact-form-stage, .contact-alternate"),
+        start: "top 92%",
+        from: { y: 30, opacity: 0, filter: "blur(6px)" },
+        duration: 0.72,
+        stagger: 0.05,
       });
       return () => reveal.kill();
     });

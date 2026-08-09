@@ -39,7 +39,13 @@ html[data-project-transition="active"] .case-study-hero {
 
 @media (max-width: 768px) {
   .project-transition-layer__title {
-    display: none;
+    display: block;
+    max-width: calc(100vw - (2 * var(--page-margin)));
+    color: var(--color-foreground);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    text-shadow: 0 10px 36px rgba(0, 0, 0, 0.42);
   }
 }
 

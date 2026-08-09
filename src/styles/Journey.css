@@ -663,3 +663,40 @@
     margin-top: clamp(3.5rem, 12vw, 5rem);
   }
 }
+
+/* Mobile motion safety: vertical content must never depend on an animation's
+   initial opacity to exist. Section-local GSAP reveals now start only when the
+   element is already entering the viewport, so keep the structural layer fully
+   visible and unclipped between refreshes/navigation jumps. */
+@media (max-width: 768px) {
+  .journey {
+    overflow: visible;
+  }
+
+  .journey-experience,
+  .experience-layout,
+  .experience-timeline,
+  .experience-entry,
+  .experience-entry__body {
+    visibility: visible;
+  }
+
+  .journey-experience {
+    min-height: 0;
+  }
+
+  .experience-layout {
+    width: 100%;
+    min-height: 0;
+  }
+
+  .experience-entry {
+    min-height: 0;
+    opacity: 1;
+  }
+
+  .experience-entry__year,
+  .experience-entry__role {
+    max-width: 100%;
+  }
+}

@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
-import { gsap } from "../animation/gsap";
+import { gsap, ScrollTrigger } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import ProjectArtwork from "../components/projects/ProjectArtwork";
 import { projects } from "../data/projects";
 import { useGSAPContext } from "../hooks/useGSAPContext";
@@ -137,8 +138,90 @@ export default function Projects() {
       gsap.set(track, { x: 0 });
       gsap.set(panels, { clearProps: "opacity,filter,transform,visibility" });
       gsap.set(section.querySelectorAll(".project-artwork, .system-project__title i, .system-project__copy, .system-project__meta"), {
-        clearProps: "opacity,filter,transform,visibility",
+        clearProps: "opacity,filter,transform,visibility,clipPath",
       });
+
+      const mobileAnimations = [];
+      const mobileTriggers = [];
+
+      mobileAnimations.push(createMobileReveal({
+        trigger: section.querySelector(".systems-header"),
+        targets: section.querySelectorAll(".systems-header__index, .systems-header__title span, .systems-header__copy"),
+        start: "top 92%",
+        from: { y: 30, opacity: 0, filter: "blur(7px)" },
+        duration: 0.72,
+        stagger: 0.055,
+      }));
+
+      panels.forEach((panel, index) => {
+        const mediaFrame = panel.querySelector(".system-project__media");
+        const artwork = panel.querySelector(".project-artwork");
+        const details = panel.querySelectorAll(
+          ".system-project__meta, .system-project__title i, .system-project__description, .system-project__technology, .system-project__link",
+        );
+
+        mobileAnimations.push(createMobileReveal({
+          trigger: panel,
+          targets: mediaFrame,
+          start: "top 88%",
+          from: {
+            y: 34,
+            opacity: 0.45,
+            scale: 0.965,
+            clipPath: "inset(8% 0 12% 0)",
+            filter: "blur(4px)",
+          },
+          to: { y: 0, opacity: 1, scale: 1, clipPath: "inset(0% 0 0% 0)", filter: "blur(0px)" },
+          duration: 0.82,
+          stagger: 0,
+        }));
+
+        mobileAnimations.push(createMobileReveal({
+          trigger: panel,
+          targets: details,
+          start: "top 84%",
+          from: { y: 24, opacity: 0, filter: "blur(5px)" },
+          duration: 0.68,
+          stagger: 0.045,
+        }));
+
+        if (artwork) {
+          mobileAnimations.push(createMobileReveal({
+            trigger: panel,
+            targets: artwork,
+            start: "top 88%",
+            from: { y: 0, opacity: 1, scale: 1.045, filter: "blur(0px)" },
+            to: { y: 0, opacity: 1, scale: 1, filter: "blur(0px)" },
+            duration: 0.95,
+            stagger: 0,
+            clearProps: "transform",
+          }));
+        }
+
+        const activateProject = () => {
+          section.style.setProperty("--systems-accent", projects[index].accent);
+          gsap.to(section, {
+            backgroundColor: projects[index].shell,
+            duration: 0.45,
+            ease: "power2.out",
+            overwrite: true,
+          });
+        };
+
+        mobileTriggers.push(ScrollTrigger.create({
+          trigger: panel,
+          start: "top 58%",
+          end: "bottom 42%",
+          onEnter: activateProject,
+          onEnterBack: activateProject,
+        }));
+      });
+
+      return () => {
+        mobileAnimations.forEach((animation) => animation.kill());
+        mobileTriggers.forEach((trigger) => trigger.kill());
+        gsap.set(section, { clearProps: "backgroundColor" });
+      };
     });
 
     return () => media.revert();

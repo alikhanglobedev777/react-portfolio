@@ -3,6 +3,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Mobile browser chrome frequently changes viewport height while the user is
+// scrolling. Ignore those height-only resizes so ScrollTrigger does not tear
+// down/recalculate animations mid-gesture; width/orientation changes are
+// refreshed explicitly by useSmoothScroll.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 export { gsap, ScrollTrigger };
 
 export function createRevealTimeline(targets, options = {}) {

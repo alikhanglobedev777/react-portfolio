@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "../animation/gsap";
+import { createMobileReveal } from "../animation/mobileReveal";
 import { useGSAPContext } from "../hooks/useGSAPContext";
 import BrandMark from "./BrandMark";
 import Manifesto from "./Manifesto";
@@ -135,7 +136,7 @@ export default function EntryExperience() {
       });
 
       media.add("(max-width: 768px)", () => {
-        gsap.timeline({
+        const heroExit = gsap.timeline({
           scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.45 },
         })
           .to(".entry-hero__line--ali > span", { xPercent: -3, ease: "none" }, 0)
@@ -144,25 +145,29 @@ export default function EntryExperience() {
           .to(heroDetails, { opacity: 0, y: -18, ease: "none" }, 0)
           .fromTo(manifesto, { backgroundColor: "#050505" }, { backgroundColor: "#0b0b0b", ease: "none" }, 0);
 
-        [...manifestoLead, ...manifestoSystem].forEach((line) => {
-          gsap.from(line, {
-            yPercent: 70,
-            opacity: 0,
-            filter: "blur(7px)",
-            duration: 0.85,
-            ease: "power3.out",
-            scrollTrigger: { trigger: line, start: "top 88%", once: true },
-          });
-        });
+        const reveals = [...manifestoLead, ...manifestoSystem].map((line) => createMobileReveal({
+          trigger: line,
+          targets: line,
+          start: "top 90%",
+          from: { yPercent: 62, y: 0, opacity: 0, filter: "blur(7px)" },
+          to: { yPercent: 0, y: 0, opacity: 1, filter: "blur(0px)" },
+          duration: 0.78,
+          stagger: 0,
+        }));
 
-        gsap.from([manifestoSupport, manifestoDisciplines], {
-          opacity: 0,
-          y: 28,
-          duration: 0.8,
-          stagger: 0.08,
-          ease: "power3.out",
-          scrollTrigger: { trigger: manifestoSupport, start: "top 88%", once: true },
-        });
+        reveals.push(createMobileReveal({
+          trigger: manifestoSupport,
+          targets: [manifestoSupport, manifestoDisciplines, manifestoIndex],
+          start: "top 92%",
+          from: { y: 24, opacity: 0, filter: "blur(5px)" },
+          duration: 0.72,
+          stagger: 0.07,
+        }));
+
+        return () => {
+          heroExit.kill();
+          reveals.forEach((reveal) => reveal.kill());
+        };
       });
 
       return () => media.revert();
