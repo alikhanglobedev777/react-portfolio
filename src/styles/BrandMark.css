@@ -22,7 +22,7 @@
   vector-effect: non-scaling-stroke;
 }
 
-.brand-mark__stroke--k {
+.brand-mark__stroke--a {
   stroke: var(--color-accent);
 }
 
@@ -38,9 +38,9 @@
 
 .brand-mark__wordmark strong {
   font-family: var(--font-sans);
-  font-size: clamp(0.82rem, 0.92vw, 0.98rem);
+  font-size: clamp(0.76rem, 0.86vw, 0.94rem);
   font-weight: 750;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
@@ -67,7 +67,7 @@
   }
 
   .brand-mark__wordmark strong {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
   }
 
   .brand-mark__wordmark small {

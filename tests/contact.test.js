@@ -156,7 +156,7 @@ test("sends validated mail with fixed from, visitor replyTo, and escaped HTML", 
 
     assert.equal(response.statusCode, 200);
     assert.equal(sentMessages.length, 1);
-    assert.equal(sentMessages[0].from, '"Ali Khan Portfolio" <portfolio@example.com>');
+    assert.equal(sentMessages[0].from, '"Muhammad Ali Portfolio" <portfolio@example.com>');
     assert.equal(sentMessages[0].replyTo, "visitor@example.com");
     assert.equal(sentMessages[0].to, "inbox@example.com");
     assert.match(sentMessages[0].subject, /^Portfolio Inquiry — /);

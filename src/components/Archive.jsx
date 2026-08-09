@@ -189,7 +189,7 @@ export default function Archive() {
 
         <div className="github-lab__console">
           <div className="github-lab__console-head technical">
-            <span>~/ALIKHAN / PUBLIC LAB</span><span>REPOSITORY CATEGORIES</span>
+            <span>~/MUHAMMADALI / PUBLIC LAB</span><span>REPOSITORY CATEGORIES</span>
           </div>
           <ol>
             {archiveCategories.map((category, index) => (

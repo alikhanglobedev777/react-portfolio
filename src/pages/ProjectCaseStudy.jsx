@@ -16,7 +16,7 @@ export default function ProjectCaseStudy() {
   useEffect(() => {
     if (!project) return undefined;
     const previousTitle = document.title;
-    document.title = `${project.name} — Ali Khan`;
+    document.title = `${project.name} — Muhammad Ali`;
     window.scrollTo(0, 0);
     return () => { document.title = previousTitle; };
   }, [project]);

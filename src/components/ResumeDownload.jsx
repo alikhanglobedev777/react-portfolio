@@ -74,10 +74,10 @@ export default function ResumeDownload() {
 
         <div className="resume-download__document" aria-hidden="true">
           <div className="resume-download__document-head">
-            <span>AK</span>
+            <span>MA</span>
             <span>CURRICULUM / VITAE</span>
           </div>
-          <strong>ALI<br />KHAN</strong>
+          <strong>MUHAMMAD<br />ALI</strong>
           <div className="resume-download__document-foot">
             <span>FULL-STACK ENGINEER</span>
             <span>PDF / CURRENT</span>
@@ -87,7 +87,7 @@ export default function ResumeDownload() {
         <div className="resume-download__copy">
           <p>Professional experience, selected systems, technical capabilities, and education in one concise document.</p>
           <ul className="resume-download__meta technical" aria-label="Resume details">
-            <li>ALI KHAN</li>
+            <li>MUHAMMAD ALI</li>
             <li>{profile.role.toUpperCase()}</li>
             <li>{profile.location.toUpperCase()}</li>
             <li>PDF / CURRENT CV</li>
@@ -95,7 +95,7 @@ export default function ResumeDownload() {
         </div>
 
         <div className="resume-download__actions">
-          <a className="resume-download__action resume-download__action--primary" href={profile.resumeUrl} download="Ali-Khan-Resume.pdf" data-cursor="link" data-magnetic data-magnetic-strength="0.08">
+          <a className="resume-download__action resume-download__action--primary" href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf" data-cursor="link" data-magnetic data-magnetic-strength="0.08">
             <span>DOWNLOAD RESUME</span><i aria-hidden="true">↓</i>
           </a>
           <a className="resume-download__action" href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" data-cursor="link" data-magnetic data-magnetic-strength="0.08">

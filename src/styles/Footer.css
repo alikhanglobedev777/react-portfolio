@@ -61,6 +61,15 @@
   will-change: transform, filter;
 }
 
+.footer-title__line--muhammad > span {
+  font-size: 0.48em;
+  letter-spacing: -0.075em;
+}
+
+.footer-title__line--ali > span {
+  padding-right: 0.08em;
+}
+
 .footer-title__line:last-child > span {
   margin-left: auto;
   padding-right: 0.08em;
@@ -269,6 +278,10 @@
     margin: clamp(4rem, 14vw, 6rem) 0;
     font-size: clamp(6.4rem, 36vw, 12rem);
     line-height: 0.6;
+  }
+
+  .footer-title__line--muhammad > span {
+    font-size: 0.52em;
   }
 
   .footer-title__line > span {

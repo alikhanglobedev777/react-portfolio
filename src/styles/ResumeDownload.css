@@ -81,7 +81,7 @@
 }
 
 .resume-download__document strong {
-  font-size: clamp(5rem, 9vw, 10rem);
+  font-size: clamp(3.9rem, 7.2vw, 8rem);
   font-weight: 600;
   line-height: 0.72;
   letter-spacing: -0.085em;
@@ -205,7 +205,7 @@
   }
 
   .resume-download__document strong {
-    font-size: clamp(4.8rem, 21vw, 7.6rem);
+    font-size: clamp(3.35rem, 15vw, 5.4rem);
   }
 
   .resume-download__copy {

@@ -246,7 +246,7 @@ export default async function handler(request, response) {
     });
 
     await transporter.sendMail({
-      from: `"Ali Khan Portfolio" <${mail.from}>`,
+      from: `"Muhammad Ali Portfolio" <${mail.from}>`,
       replyTo: email,
       to: mail.to,
       subject: `Portfolio Inquiry — ${subject}`,

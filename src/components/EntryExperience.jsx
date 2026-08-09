@@ -35,7 +35,7 @@ export default function EntryExperience() {
     if (!root || !loader) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const alreadyPlayed = window.sessionStorage.getItem("ak-entry-played") === "true";
+    const alreadyPlayed = window.sessionStorage.getItem("ma-entry-played") === "true";
     const hero = root.querySelector(".entry-hero");
     const heroLines = root.querySelectorAll(".entry-hero__line > span");
     const heroDetails = root.querySelectorAll(".entry-hero__meta, .entry-hero__secondary, .entry-hero__status, .entry-hero__scroll");
@@ -73,8 +73,8 @@ export default function EntryExperience() {
             invalidateOnRefresh: true,
           },
         })
-          .to(".entry-hero__line--ali > span", { xPercent: -8, ease: "none" }, 0)
-          .to(".entry-hero__line--khan > span", { xPercent: 10, ease: "none" }, 0)
+          .to(".entry-hero__line--muhammad > span", { xPercent: -8, ease: "none" }, 0)
+          .to(".entry-hero__line--ali > span", { xPercent: 10, ease: "none" }, 0)
           .to(".entry-hero__title", { scale: 0.96, transformOrigin: "center center", ease: "none" }, 0)
           .to(sculpture, { yPercent: 17, scale: 0.74, rotate: 5, opacity: 0.35, ease: "none" }, 0)
           .to(heroDetails, { y: -38, opacity: 0, ease: "none" }, 0)
@@ -146,8 +146,8 @@ export default function EntryExperience() {
         const heroExit = gsap.timeline({
           scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.45 },
         })
-          .to(".entry-hero__line--ali > span", { xPercent: -3, ease: "none" }, 0)
-          .to(".entry-hero__line--khan > span", { xPercent: 4, ease: "none" }, 0)
+          .to(".entry-hero__line--muhammad > span", { xPercent: -3, ease: "none" }, 0)
+          .to(".entry-hero__line--ali > span", { xPercent: 4, ease: "none" }, 0)
           .to(sculpture, { scale: 0.88, opacity: 0.48, ease: "none" }, 0)
           .to(heroDetails, { opacity: 0, y: -18, ease: "none" }, 0)
           .fromTo(manifesto, { backgroundColor: "#050505" }, { backgroundColor: "#0b0b0b", ease: "none" }, 0);
@@ -200,7 +200,7 @@ export default function EntryExperience() {
     const timeline = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => {
-        window.sessionStorage.setItem("ak-entry-played", "true");
+        window.sessionStorage.setItem("ma-entry-played", "true");
         document.body.style.overflow = "";
         loader.style.display = "none";
       },
@@ -234,7 +234,7 @@ export default function EntryExperience() {
 
   return (
     <div className="entry-experience" ref={rootRef}>
-      <div className="entry-loader" role="status" aria-label="Initializing Ali Khan portfolio">
+      <div className="entry-loader" role="status" aria-label="Initializing Muhammad Ali portfolio">
         <div className="entry-loader__content">
           <div className="entry-loader__top">
             <div className="clip"><span className="entry-loader__mark"><BrandMark compact /></span></div>
@@ -265,9 +265,9 @@ export default function EntryExperience() {
           <span>LAHORE / PK</span>
         </div>
 
-        <h1 className="entry-hero__title" id="entry-title" aria-label="Ali Khan">
+        <h1 className="entry-hero__title" id="entry-title" aria-label="Muhammad Ali">
+          <span className="entry-hero__line entry-hero__line--muhammad"><span>MUHAMMAD</span></span>
           <span className="entry-hero__line entry-hero__line--ali"><span>ALI</span></span>
-          <span className="entry-hero__line entry-hero__line--khan"><span>KHAN</span></span>
         </h1>
 
         <div className="entry-hero__visual">

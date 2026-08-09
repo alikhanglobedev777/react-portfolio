@@ -2,7 +2,7 @@ export default function ProjectArtwork({ project, index, total }) {
   return (
     <div className="project-artwork" data-variant={project.variant} aria-hidden="true">
       <div className="project-artwork__top technical">
-        <span>AK / SYSTEM {String(index + 1).padStart(2, "0")}</span>
+        <span>MA / SYSTEM {String(index + 1).padStart(2, "0")}</span>
         <span>{project.category}</span>
       </div>
       <div className="project-artwork__field">

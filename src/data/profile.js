@@ -1,5 +1,5 @@
 export const profile = {
-  name: "Ali Khan",
+  name: "Muhammad Ali",
   location: "Lahore / Pakistan",
   locationShort: "Lahore / PK",
   email: "ak.alikhan.5911@gmail.com",

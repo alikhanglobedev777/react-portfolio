@@ -107,9 +107,9 @@ export default function Footer() {
         <span>{profile.location.toUpperCase()}</span>
       </div>
 
-      <h2 className="footer-title" aria-label="Ali Khan">
-        <span className="footer-title__line"><span>ALI</span></span>
-        <span className="footer-title__line"><span>KHAN</span></span>
+      <h2 className="footer-title" aria-label="Muhammad Ali">
+        <span className="footer-title__line footer-title__line--muhammad"><span>MUHAMMAD</span></span>
+        <span className="footer-title__line footer-title__line--ali"><span>ALI</span></span>
       </h2>
 
       <div className="footer-actions">
@@ -118,7 +118,7 @@ export default function Footer() {
           <strong>GitHub, LinkedIn, WhatsApp and email are available in the contact hub.</strong>
           <div className="footer-contact-hub__links">
             <a href="#contact" onClick={(event) => handleSectionNavigation(event, "contact")} data-cursor="contact">OPEN CONTACT <span aria-hidden="true">↑</span></a>
-            <a href={profile.resumeUrl} download="Ali-Khan-Resume.pdf" data-cursor="link">RESUME <span aria-hidden="true">↓</span></a>
+            <a href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf" data-cursor="link">RESUME <span aria-hidden="true">↓</span></a>
           </div>
         </div>
 

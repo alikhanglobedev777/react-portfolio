@@ -32,7 +32,7 @@ export default function TransitionLayer({ routeKey }) {
   return (
     <div className="transition-layer" ref={layerRef} aria-hidden="true">
       <div className="transition-layer__panel" />
-      <div className="transition-layer__mask">ALI KHAN / TRANSITION SYSTEM</div>
+      <div className="transition-layer__mask">MUHAMMAD ALI / TRANSITION SYSTEM</div>
     </div>
   );
 }

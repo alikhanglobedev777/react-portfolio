@@ -145,7 +145,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar" aria-label="Primary navigation">
-        <a className="navbar__mark" href="#home" onClick={(event) => goToSection(event, "home")} aria-label="Ali Khan, index" data-cursor="link">
+        <a className="navbar__mark" href="#home" onClick={(event) => goToSection(event, "home")} aria-label="Muhammad Ali, index" data-cursor="link">
           <BrandMark />
         </a>
         <button ref={toggleRef} className="navbar__toggle" type="button" onClick={() => setMenuOpen(true)} aria-expanded={menuOpen} aria-controls="fullscreen-menu" data-cursor="link" data-magnetic data-magnetic-strength="0.12">
@@ -156,7 +156,7 @@ export default function Navbar() {
       <div className="fullscreen-menu" id="fullscreen-menu" ref={menuRef} aria-hidden="true">
         <div className="fullscreen-menu__reaction" ref={reactionRef} data-active="0" aria-hidden="true" />
         <div className="fullscreen-menu__top">
-          <span className="fullscreen-menu__brand"><BrandMark compact /><span className="technical">NAVIGATION / AK</span></span>
+          <span className="fullscreen-menu__brand"><BrandMark compact /><span className="technical">NAVIGATION / MA</span></span>
           <button ref={closeRef} className="fullscreen-menu__close" type="button" onClick={closeMenu} data-cursor="link" tabIndex={menuOpen ? 0 : -1}>
             <span aria-hidden="true">×</span> CLOSE
           </button>
