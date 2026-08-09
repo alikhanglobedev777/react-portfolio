@@ -477,12 +477,24 @@
   }
 
   .entry-hero__visual {
-    top: 21%;
-    bottom: 25%;
-    left: -3%;
-    width: 106%;
-    opacity: 0.78;
+    /* Mobile now renders the same Three.js chrome sculpture as desktop. Keep
+       it large and behind the name so the hero retains the same visual
+       identity instead of looking like a separate CSS-ring composition. */
+    top: 24%;
+    bottom: 20%;
+    left: -6%;
+    width: 112%;
+    opacity: 0.94;
     pointer-events: none;
+  }
+
+  .hero-sculpture-shell {
+    filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.34));
+  }
+
+  .hero-sculpture-shell.is-webgl .hero-sculpture__fallback {
+    visibility: hidden;
+    opacity: 0;
   }
 
   .entry-hero__secondary {
@@ -517,8 +529,10 @@
   }
 
   .entry-hero__visual {
-    top: 23%;
-    bottom: 27%;
+    top: 25%;
+    bottom: 21%;
+    left: -10%;
+    width: 120%;
   }
 
   .entry-hero__secondary {
@@ -543,7 +557,13 @@
   }
 
   .entry-hero__visual {
-    display: none;
+    display: block;
+    top: 13%;
+    right: -2%;
+    bottom: 8%;
+    left: auto;
+    width: 58%;
+    opacity: 0.72;
   }
 
   .entry-hero__title {

@@ -14,11 +14,18 @@ export default function EntryExperience() {
   const [enableWebGL, setEnableWebGL] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 769px) and (prefers-reduced-motion: no-preference)");
-    const update = () => setEnableWebGL(query.matches);
+    // Use the same Three.js hero sculpture on desktop and mobile. The
+    // sculpture itself adapts its geometry/DPR on small screens, so mobile no
+    // longer falls back to a visually different CSS-only set of rings.
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: no-preference)");
+    const update = () => {
+      const saveData = navigator.connection?.saveData === true;
+      setEnableWebGL(motionQuery.matches && !saveData);
+    };
+
     update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    motionQuery.addEventListener("change", update);
+    return () => motionQuery.removeEventListener("change", update);
   }, []);
 
   const runEntry = useCallback(() => {
