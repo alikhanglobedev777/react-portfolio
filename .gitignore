@@ -22,3 +22,8 @@ dist-ssr
 *.sln
 *.sw?
 config.bat
+
+# Do not track local or production credentials
+.env
+.env.*
+!.env.example
