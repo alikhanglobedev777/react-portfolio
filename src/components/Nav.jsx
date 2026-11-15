@@ -55,9 +55,19 @@ export default function Nav() {
 
   const go = (id) => (event) => {
     event.preventDefault();
-    setOpen(false);
-    if (isHome) scrollToId(id);
-    else navigate("/", { state: { scrollTo: id } });
+    if (open) {
+      // Release the scroll lock *before* scrolling — the smooth-scroll engine
+      // ignores scroll requests while the mobile menu has it stopped.
+      setOpen(false);
+      stopScroll(false);
+      document.documentElement.classList.remove("menu-open");
+    }
+    if (isHome) {
+      // Wait a frame so the menu sheet is gone and layout is settled.
+      requestAnimationFrame(() => scrollToId(id));
+    } else {
+      navigate("/", { state: { scrollTo: id } });
+    }
   };
 
   return (

@@ -36,7 +36,11 @@ export function scrollToId(id, { immediate = false } = {}) {
   if (target === null) return;
   const offset = id === "top" ? 0 : -72;
   if (lenis) {
-    lenis.scrollTo(target, { offset, immediate, duration: 1.4 });
+    // Re-measure first: after a route change the page height has changed and
+    // Lenis would otherwise clamp the scroll to the previous page's limit.
+    lenis.resize();
+    // force: navigation scrolls must run even if scrolling was just locked.
+    lenis.scrollTo(target, { offset, immediate, duration: 1.4, force: true });
     return;
   }
   const top = target === 0 ? 0 : target.getBoundingClientRect().top + window.scrollY + offset;
