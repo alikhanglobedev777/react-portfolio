@@ -1,134 +1,136 @@
-import { useCallback, useRef } from "react";
-import { gsap } from "../animation/gsap";
-import { createMobileReveal } from "../animation/mobileReveal";
-import { scrollToSection } from "../animation/scrollController";
-import { useGSAPContext } from "../hooks/useGSAPContext";
-import { profile } from "../data/profile";
-import "../styles/Footer.css";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { navLinks, profile, socials } from "../data/content";
+import { gsap, prefersReducedMotion, scrollToId } from "../lib/motion";
+
+function useLahoreTime() {
+  const format = () =>
+    new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Karachi",
+    }).format(new Date());
+  const [time, setTime] = useState(format);
+  useEffect(() => {
+    const timer = window.setInterval(() => setTime(format()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return time;
+}
+
+const FIRST = "Muhammad";
+const LAST = "Ali";
 
 export default function Footer() {
-  const footerRef = useRef(null);
+  const time = useLahoreTime();
+  const rootRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const setupMotion = useCallback(() => {
-    const footer = footerRef.current;
-    if (!footer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-
-    const title = footer.querySelector(".footer-title");
-    const backToTop = footer.querySelector(".footer-back-to-top");
-    const media = gsap.matchMedia();
-    const listeners = [];
-
-    media.add("(min-width: 769px)", () => {
-      const entrance = gsap.timeline({
-        scrollTrigger: { trigger: footer, start: "top 94%", end: "top 32%", scrub: 0.62 },
-      })
-        .fromTo(footer, { y: 120, clipPath: "inset(12% 0 0 0)" }, { y: 0, clipPath: "inset(0% 0 0 0)", ease: "none" }, 0)
-        .from(".footer-title__line span", { yPercent: 112, filter: "blur(12px)", stagger: 0.08, ease: "none" }, 0.14)
-        .from(".footer-meta > *, .footer-contact-hub, .footer-back-to-top, .footer-mantra span", { y: 28, opacity: 0, stagger: 0.045, ease: "none" }, 0.35);
-      return () => entrance.kill();
-    });
-
-    media.add("(max-width: 768px)", () => {
-      const reveal = createMobileReveal({
-        trigger: footer,
-        targets: footer.querySelectorAll(".footer-meta > *, .footer-title__line span, .footer-contact-hub, .footer-back-to-top, .footer-mantra span"),
-        start: "top 94%",
-        from: { y: 28, opacity: 0, filter: "blur(6px)" },
-        duration: 0.7,
-        stagger: 0.045,
+  // Wordmark letters rise into place when the footer scrolls in.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || prefersReducedMotion()) return undefined;
+    const ctx = gsap.context(() => {
+      gsap.from(".footer__char", {
+        yPercent: 110,
+        duration: 1.1,
+        ease: "expo.out",
+        stagger: 0.035,
+        scrollTrigger: { trigger: ".footer__word", start: "top 95%", once: true },
       });
-      return () => reveal.kill();
-    });
+    }, root);
+    return () => ctx.revert();
+  }, [location.pathname]);
 
-    if (window.matchMedia("(pointer: fine)").matches) {
-      const moveTitleX = gsap.quickTo(title, "x", { duration: 0.7, ease: "power3.out" });
-      const moveTitleY = gsap.quickTo(title, "y", { duration: 0.7, ease: "power3.out" });
-      const onFooterMove = (event) => {
-        const bounds = footer.getBoundingClientRect();
-        const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-        const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-        footer.style.setProperty("--footer-pointer-x", `${event.clientX - bounds.left}px`);
-        footer.style.setProperty("--footer-pointer-y", `${event.clientY - bounds.top}px`);
-        moveTitleX(x * 22);
-        moveTitleY(y * 12);
-      };
-      const resetFooterPointer = () => {
-        moveTitleX(0);
-        moveTitleY(0);
-      };
-      footer.addEventListener("pointermove", onFooterMove, { passive: true });
-      footer.addEventListener("pointerleave", resetFooterPointer);
-      listeners.push(() => {
-        footer.removeEventListener("pointermove", onFooterMove);
-        footer.removeEventListener("pointerleave", resetFooterPointer);
-      });
-
-      const onBackMove = (event) => {
-        const bounds = backToTop.getBoundingClientRect();
-        const x = (event.clientX - bounds.left - bounds.width / 2) * 0.14;
-        const y = (event.clientY - bounds.top - bounds.height / 2) * 0.2;
-        gsap.to(backToTop, { x, y, duration: 0.38, ease: "power3.out", overwrite: true });
-        gsap.to(backToTop.querySelector("i"), { y: y * 0.8 - 5, duration: 0.38, overwrite: true });
-      };
-      const resetBack = () => {
-        gsap.to(backToTop, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
-        gsap.to(backToTop.querySelector("i"), { y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
-      };
-      backToTop.addEventListener("pointermove", onBackMove, { passive: true });
-      backToTop.addEventListener("pointerleave", resetBack);
-      listeners.push(() => {
-        backToTop.removeEventListener("pointermove", onBackMove);
-        backToTop.removeEventListener("pointerleave", resetBack);
-      });
-    }
-
-    return () => {
-      media.revert();
-      listeners.forEach((remove) => remove());
-    };
-  }, []);
-
-  useGSAPContext(footerRef, setupMotion);
-
-  const handleSectionNavigation = (event, target) => {
+  const go = (id) => (event) => {
     event.preventDefault();
-    scrollToSection(target, {
-      immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      duration: target === "home" ? 1.15 : 1.05,
-    });
+    if (location.pathname === "/") scrollToId(id);
+    else navigate("/", { state: { scrollTo: id } });
   };
 
+  const connect = [socials.linkedin, socials.github, socials.whatsapp];
+
   return (
-    <footer className="footer" ref={footerRef}>
-      <div className="footer-pointer-field" aria-hidden="true" />
+    <footer ref={rootRef} className="footer">
+      <div className="container">
+        <div className="footer__grid">
+          <div className="footer__brand">
+            <span className="footer__mark" aria-hidden="true">MA</span>
+            <p>
+              Software engineer building business systems and web products in Lahore, Pakistan.
+            </p>
+            <p className="footer__status">
+              <span className="pulse pulse--ok" aria-hidden="true" />
+              Available for work
+            </p>
+          </div>
 
-      <div className="footer-meta technical">
-        <span>{profile.name.toUpperCase()} &copy; 2026</span>
-        <span>{profile.location.toUpperCase()}</span>
-      </div>
+          <nav className="footer__col" aria-label="Footer">
+            <h2>Navigate</h2>
+            <ul>
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <a href={`/#${link.id}`} onClick={go(link.id)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-      <h2 className="footer-title" aria-label="Muhammad Ali">
-        <span className="footer-title__line footer-title__line--muhammad"><span>MUHAMMAD</span></span>
-        <span className="footer-title__line footer-title__line--ali"><span>ALI</span></span>
-      </h2>
+          <div className="footer__col">
+            <h2>Connect</h2>
+            <ul>
+              {connect.map((social) => (
+                <li key={social.label}>
+                  <a href={social.href} target="_blank" rel="noopener noreferrer">
+                    {social.label} <span aria-hidden="true">↗</span>
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf">
+                  Résumé <span aria-hidden="true">↓</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
-      <div className="footer-actions">
-        <div className="footer-contact-hub">
-          <p className="technical">DIRECT / CONNECT</p>
-          <strong>GitHub, LinkedIn, WhatsApp and email are available in the contact hub.</strong>
-          <div className="footer-contact-hub__links">
-            <a href="#contact" onClick={(event) => handleSectionNavigation(event, "contact")} data-cursor="contact">OPEN CONTACT <span aria-hidden="true">↑</span></a>
-            <a href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf" data-cursor="link">RESUME <span aria-hidden="true">↓</span></a>
+          <div className="footer__col">
+            <h2>Contact</h2>
+            <ul>
+              <li><a href={socials.email.href} className="footer__email">{profile.email}</a></li>
+              <li className="footer__meta">{profile.phoneDisplay}</li>
+              <li className="footer__meta">Lahore · {time} PKT</li>
+            </ul>
           </div>
         </div>
 
-        <a className="footer-back-to-top" href="#home" onClick={(event) => handleSectionNavigation(event, "home")} data-cursor="link" aria-label="Back to top">
-          <span>BACK TO TOP</span><i aria-hidden="true">&uarr;</i>
-        </a>
-      </div>
+        <p className="footer__word" aria-hidden="true">
+          <span className="footer__w">
+            {FIRST.split("").map((char, i) => (
+              <span className="footer__mask" key={i}>
+                <span className="footer__char">{char}</span>
+              </span>
+            ))}
+          </span>
+          <span className="footer__w footer__w--serif">
+            <span className="footer__mask footer__mask--word">
+              <span className="footer__char">
+                {LAST}
+                <span className="footer__dot" />
+              </span>
+            </span>
+          </span>
+        </p>
 
-      <div className="footer-mantra" aria-label="Build. Ship. Repeat.">
-        <span>BUILD</span><i aria-hidden="true">/</i><span>SHIP</span><i aria-hidden="true">/</i><span>REPEAT.</span>
+        <div className="footer__bottom">
+          <span>© {new Date().getFullYear()} {profile.name}. All rights reserved.</span>
+          <span className="footer__built">Designed &amp; built by Muhammad Ali</span>
+          <button type="button" className="footer__top-btn" onClick={() => scrollToId("top")}>
+            Back to top <span aria-hidden="true">↑</span>
+          </button>
+        </div>
       </div>
     </footer>
   );

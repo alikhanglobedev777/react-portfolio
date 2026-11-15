@@ -1,48 +1,54 @@
-import { useEffect, useLayoutEffect } from "react";
-import { useLocation, useNavigationType } from "react-router-dom";
-import { ScrollTrigger } from "../animation/gsap";
-import { scrollToTarget } from "../animation/scrollController";
-import EntryExperience from "../components/EntryExperience";
-import Archive from "../components/Archive";
-import Journey from "../components/Journey";
-import MotionDirector from "../components/foundation/MotionDirector";
-import ResumeDownload from "../components/ResumeDownload";
-import Contact from "./Contact";
-import Projects from "./Projects";
+import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import CtaBand from "../components/CtaBand";
+import { scrollToId } from "../lib/motion";
+import { useReveal } from "../lib/useReveal";
+import About from "../sections/About";
+import Automation from "../sections/Automation";
+import Capabilities from "../sections/Capabilities";
+import Contact from "../sections/Contact";
+import Experience from "../sections/Experience";
+import Expertise from "../sections/Expertise";
+import Hero from "../sections/Hero";
+import Next from "../sections/Next";
+import Numbers from "../sections/Numbers";
+import Work from "../sections/Work";
 
 export default function Home() {
+  const rootRef = useRef(null);
   const location = useLocation();
-  const navigationType = useNavigationType();
+  const navigate = useNavigate();
 
-  useLayoutEffect(() => {
-    window.history.scrollRestoration = "manual";
-    const returnY = location.state?.projectReturnY;
-    if (Number.isFinite(returnY)) return;
-    scrollToTarget(0, { immediate: true });
-    window.history.replaceState(window.history.state, "", "/");
-  }, [location.state]);
+  useReveal(rootRef);
 
   useEffect(() => {
-    const returnY = location.state?.projectReturnY;
-    if (location.pathname === "/" && navigationType === "POP" && Number.isFinite(returnY)) {
-      const timer = window.setTimeout(() => {
-        ScrollTrigger.refresh();
-        scrollToTarget(returnY, { immediate: true });
-      }, 80);
-      return () => window.clearTimeout(timer);
-    }
-    return undefined;
-  }, [location, navigationType]);
+    document.title = "Muhammad Ali — Software Engineer";
+  }, []);
+
+  // Arriving from another page with a section target (e.g. nav on a case study).
+  useEffect(() => {
+    const target = location.state?.scrollTo || location.hash.replace("#", "");
+    if (!target) return undefined;
+    const timer = window.setTimeout(() => {
+      scrollToId(target, { immediate: target !== "contact" && target !== "work" });
+      navigate(location.pathname, { replace: true, state: null });
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [location, navigate]);
 
   return (
-    <>
-      <EntryExperience />
-      <Projects />
-      <Archive />
-      <Journey />
-      <ResumeDownload />
-      <section id="contact"><Contact /></section>
-      <MotionDirector />
-    </>
+    <div ref={rootRef}>
+      <Hero />
+      <Work />
+      <Numbers />
+      <Capabilities />
+      <Automation />
+      <Experience />
+      <About />
+      <Expertise />
+      <Next />
+      <CtaBand />
+      <Contact />
+    </div>
   );
 }

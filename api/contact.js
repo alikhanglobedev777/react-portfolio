@@ -119,7 +119,9 @@ function validateAttachment(value) {
   }
 
   const trimmedName = name.trim();
-  if (!trimmedName || trimmedName.length > 120 || /[\/\\\0-\x1f]/.test(trimmedName)) {
+  // Reject path separators and ASCII control characters in filenames.
+  // eslint-disable-next-line no-control-regex
+  if (!trimmedName || trimmedName.length > 120 || /[/\\\0-\x1f]/.test(trimmedName)) {
     return { error: "Invalid attachment filename." };
   }
 
