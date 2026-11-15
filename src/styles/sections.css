@@ -11,7 +11,7 @@
   height: 100svh;
   min-height: 580px;
   max-height: 960px;
-  padding-top: clamp(28px, 6svh, 64px);
+  padding-top: 84px;
   overflow: clip;
   isolation: isolate;
 }
@@ -365,7 +365,7 @@
     height: auto;
     min-height: 100svh;
     max-height: none;
-    padding-top: 32px;
+    padding-top: 84px;
   }
   .hero__layout {
     grid-template-columns: 1fr;

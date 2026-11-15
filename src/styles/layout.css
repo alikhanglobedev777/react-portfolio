@@ -14,21 +14,6 @@
   transform: translateY(-120%);
 }
 
-/* Landing view: no header until the visitor scrolls a little */
-.nav.is-landing {
-  transform: translateY(-130%);
-  opacity: 0;
-  pointer-events: none;
-}
-.nav.is-landing:focus-within {
-  transform: none;
-  opacity: 1;
-  pointer-events: auto;
-}
-.nav {
-  transition: transform 0.7s var(--ease-out), opacity 0.5s;
-}
-
 .nav__bar {
   display: flex;
   align-items: center;
