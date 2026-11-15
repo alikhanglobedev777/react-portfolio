@@ -4,6 +4,9 @@ import { navLinks, profile } from "../data/content";
 import { scrollToId, stopScroll } from "../lib/motion";
 import Magnetic from "./Magnetic";
 
+// On the home page the landing view shows no header until the visitor scrolls this far.
+const LANDING_OFFSET = 60;
+
 export default function Nav() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,12 +15,14 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("");
+  const [atTop, setAtTop] = useState(() => window.scrollY < LANDING_OFFSET);
 
   // Solid background after leaving the top; hide while scrolling down.
   useEffect(() => {
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
+      setAtTop(y < LANDING_OFFSET);
       setScrolled(y > 24);
       setHidden(y > 480 && y > lastY + 4);
       if (y < lastY - 4) setHidden(false);
@@ -61,7 +66,9 @@ export default function Nav() {
   };
 
   return (
-    <header className={`nav${scrolled ? " is-scrolled" : ""}${hidden && !open ? " is-hidden" : ""}${open ? " is-open" : ""}`}>
+    <header
+      className={`nav${scrolled ? " is-scrolled" : ""}${hidden && !open ? " is-hidden" : ""}${open ? " is-open" : ""}${isHome && atTop && !open ? " is-landing" : ""}`}
+    >
       <div className="container">
       <div className="nav__bar">
         <a href="/" className="nav__brand" onClick={go("top")} aria-label="Muhammad Ali — back to top">

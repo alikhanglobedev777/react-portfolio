@@ -96,10 +96,11 @@ export default function Contact() {
               </li>
             ))}
             <li>
-              <a href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf">
+              <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
                 <span>Résumé</span>
-                <small>PDF download</small>
-                <span aria-hidden="true" className="contact__arrow">↓</span>
+                <small>View PDF in browser</small>
+                <span aria-hidden="true" className="contact__arrow">↗</span>
+                <span className="sr-only">(opens in a new tab)</span>
               </a>
             </li>
           </ul>

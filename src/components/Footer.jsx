@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navLinks, profile, socials } from "../data/content";
-import { gsap, prefersReducedMotion, scrollToId } from "../lib/motion";
+import { scrollToId } from "../lib/motion";
+import Wordmark from "./Wordmark";
 
 function useLahoreTime() {
   const format = () =>
@@ -18,30 +19,10 @@ function useLahoreTime() {
   return time;
 }
 
-const FIRST = "Muhammad";
-const LAST = "Ali";
-
 export default function Footer() {
   const time = useLahoreTime();
-  const rootRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Wordmark letters rise into place when the footer scrolls in.
-  useLayoutEffect(() => {
-    const root = rootRef.current;
-    if (!root || prefersReducedMotion()) return undefined;
-    const ctx = gsap.context(() => {
-      gsap.from(".footer__char", {
-        yPercent: 110,
-        duration: 1.1,
-        ease: "expo.out",
-        stagger: 0.035,
-        scrollTrigger: { trigger: ".footer__word", start: "top 95%", once: true },
-      });
-    }, root);
-    return () => ctx.revert();
-  }, [location.pathname]);
 
   const go = (id) => (event) => {
     event.preventDefault();
@@ -52,7 +33,7 @@ export default function Footer() {
   const connect = [socials.linkedin, socials.github, socials.whatsapp];
 
   return (
-    <footer ref={rootRef} className="footer">
+    <footer className="footer">
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
@@ -89,8 +70,9 @@ export default function Footer() {
                 </li>
               ))}
               <li>
-                <a href={profile.resumeUrl} download="Muhammad-Ali-Resume.pdf">
-                  Résumé <span aria-hidden="true">↓</span>
+                <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
+                  Résumé <span aria-hidden="true">↗</span>
+                  <span className="sr-only"> (PDF, opens in a new tab)</span>
                 </a>
               </li>
             </ul>
@@ -106,23 +88,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="footer__word" aria-hidden="true">
-          <span className="footer__w">
-            {FIRST.split("").map((char, i) => (
-              <span className="footer__mask" key={i}>
-                <span className="footer__char">{char}</span>
-              </span>
-            ))}
-          </span>
-          <span className="footer__w footer__w--serif">
-            <span className="footer__mask footer__mask--word">
-              <span className="footer__char">
-                {LAST}
-                <span className="footer__dot" />
-              </span>
-            </span>
-          </span>
-        </p>
+        <Wordmark key={location.pathname} />
 
         <div className="footer__bottom">
           <span>© {new Date().getFullYear()} {profile.name}. All rights reserved.</span>
