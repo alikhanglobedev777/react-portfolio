@@ -1,29 +1,49 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
+import { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import Cursor from "./components/Cursor";
 import Footer from "./components/Footer";
+import Loader from "./components/Loader";
+import Nav from "./components/Nav";
+import ScrollProgress from "./components/ScrollProgress";
+import ScrollTopRing from "./components/ScrollTopRing";
+import { ScrollTrigger, startSmoothScroll } from "./lib/motion";
+import CaseStudy from "./pages/CaseStudy";
+import Home from "./pages/Home";
 
-function App() {
+function Shell() {
+  const location = useLocation();
+
+  useEffect(() => startSmoothScroll(), []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => ScrollTrigger.refresh(), 400);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname]);
+
   return (
-    <Router>
-      <div>
-        <Navbar />
-        <main>
-          
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<Home />} />
-            <Route path="/blogs" element={<Home />} />
-            <Route path="/projects" element={<Home />} />
-            <Route path="/contact" element={<Home />} />
-          </Routes>
-
-          <Footer />
-        </main>
-      </div>
-    </Router>
+    <>
+      <a href="#main" className="skip-link">Skip to content</a>
+      <Loader />
+      <Cursor />
+      <ScrollProgress />
+      <Nav />
+      <main id="main" key={location.pathname} className="page">
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/work/:slug" element={<CaseStudy />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <Footer />
+      <ScrollTopRing />
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Shell />
+    </BrowserRouter>
+  );
+}
