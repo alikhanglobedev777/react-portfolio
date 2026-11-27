@@ -21,3 +21,24 @@ For local end-to-end API testing, copy `.env.example` to an ignored `.env.local`
 ## Abuse protection
 
 The endpoint uses a honeypot, strict server validation, payload and field limits, duplicate frontend submission protection, and best-effort per-instance request throttling. The in-memory throttle is not distributed or durable across Vercel Functions. If stronger protection is needed, add a durable rate limiter such as Vercel KV/Upstash Redis, or configure Vercel Firewall rate-limiting rules for `/api/contact`.
+
+## Gmail and deployment troubleshooting
+
+For Gmail, use `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, and
+`SMTP_SECURE=true`. Use a newly generated Google app password for
+`SMTP_PASS` (with two-step verification enabled) and the authenticated Gmail
+address for `SMTP_USER` and `MAIL_FROM`. Set `MAIL_TO` to the intended inbox.
+Do not reuse credentials exposed in Git history. Never commit actual values.
+
+Both main and master should deploy the current portfolio, not the old
+empty package manifest. Vercel should use the Vite preset with output
+directory `dist` and build command `npm run build`.
+
+If delivery fails, open the Vercel runtime logs for `/api/contact`.
+The function records only a safe error category and names of missing
+environment variables. `MAIL_CONFIG_MISSING` indicates missing variables;
+`MAIL_CONFIG_INVALID` indicates a port/TLS configuration problem;
+`EAUTH` indicates an authentication failure; and `ETIMEDOUT` or
+`ECONNECTION` indicates a connection problem. Do not paste secrets into logs.
+The form also offers an explicit email-app fallback, without falsely
+reporting successful delivery.

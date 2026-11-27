@@ -174,3 +174,26 @@ test("sends validated mail with fixed from, visitor replyTo, and escaped HTML", 
     }
   }
 });
+
+test("missing SMTP configuration reports only missing variable names", async () => {
+  const previous = process.env.SMTP_HOST;
+  const previousError = console.error;
+  const logs = [];
+  delete process.env.SMTP_HOST;
+  console.error = (...args) => logs.push(args);
+  try {
+    const response = createResponse();
+    await handler(createRequest({
+      headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.19" },
+    }), response);
+    assert.equal(response.statusCode, 500);
+    assert.equal(response.payload.ok, false);
+    assert.equal(logs[0][1].code, "MAIL_CONFIG_MISSING");
+    assert.ok(logs[0][1].missing.includes("SMTP_HOST"));
+    assert.doesNotMatch(response.payload.message, /SMTP_HOST/);
+  } finally {
+    console.error = previousError;
+    if (previous === undefined) delete process.env.SMTP_HOST;
+    else process.env.SMTP_HOST = previous;
+  }
+});

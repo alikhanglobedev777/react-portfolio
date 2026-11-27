@@ -45,7 +45,7 @@ export default function Contact() {
         signal: controllerRef.current.signal,
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok || data.ok === false) {
+      if (!response.ok || data.ok !== true) {
         throw new Error(data.message || "Something went wrong. Please email me directly.");
       }
       setStatus("sent");
@@ -139,6 +139,9 @@ export default function Contact() {
             </button>
             <p className={`contact__feedback contact__feedback--${status}`} role="status" aria-live="polite">
               {feedback}
+              {status === "error" && (
+                <>{" "}<a href={`mailto:${profile.email}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(form.message + "\n\nFrom: " + form.name + " (" + form.email + ")")}`}>Open email app instead</a></>
+              )}
             </p>
           </div>
         </form>

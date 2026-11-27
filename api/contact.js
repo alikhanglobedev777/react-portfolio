@@ -172,16 +172,29 @@ function escapeHtml(value) {
 
 function getMailConfiguration() {
   const required = ["SMTP_HOST", "SMTP_PORT", "SMTP_SECURE", "SMTP_USER", "SMTP_PASS", "MAIL_FROM", "MAIL_TO"];
-  if (required.some((key) => !process.env[key])) throw new Error("Missing mail configuration");
+  const missing = required.filter((key) => !process.env[key]?.trim());
+  if (missing.length) {
+    const error = new Error("Missing mail configuration");
+    error.code = "MAIL_CONFIG_MISSING";
+    error.missing = missing;
+    throw error;
+  }
 
   const port = Number(process.env.SMTP_PORT);
-  if (!Number.isInteger(port) || port < 1 || port > 65_535) throw new Error("Invalid mail configuration");
-  if (!['true', 'false'].includes(process.env.SMTP_SECURE.toLowerCase())) throw new Error("Invalid mail configuration");
+  const secure = process.env.SMTP_SECURE.trim().toLowerCase();
+  if (!Number.isInteger(port) || port < 1 || port > 65_535 ||
+      !["true", "false"].includes(secure) || port === 25 ||
+      (port === 465 && secure !== "true") ||
+      (port === 587 && secure !== "false")) {
+    const error = new Error("Invalid mail configuration");
+    error.code = "MAIL_CONFIG_INVALID";
+    throw error;
+  }
 
   return {
     host: process.env.SMTP_HOST,
     port,
-    secure: process.env.SMTP_SECURE.toLowerCase() === "true",
+    secure: secure === "true",
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
     from: process.env.MAIL_FROM,
@@ -245,6 +258,12 @@ export default async function handler(request, response) {
       port: mail.port,
       secure: mail.secure,
       auth: { user: mail.user, pass: mail.pass },
+      requireTLS: !mail.secure,
+      connectionTimeout: 8_000,
+      greetingTimeout: 8_000,
+      socketTimeout: 15_000,
+      disableFileAccess: true,
+      disableUrlAccess: true,
     });
 
     await transporter.sendMail({
@@ -281,8 +300,20 @@ export default async function handler(request, response) {
     });
 
     respond(response, 200, { ok: true, message: "Message received." });
-  } catch {
-    console.error("Contact delivery failed.");
-    respond(response, 500, { ok: false, message: "Unable to send your message right now. Please try again later." });
+  } catch (error) {
+    // Never log credentials, visitor data, or raw SMTP error messages.
+    const knownCodes = new Set([
+      "MAIL_CONFIG_MISSING", "MAIL_CONFIG_INVALID", "EAUTH", "ETIMEDOUT",
+      "ECONNECTION", "ESOCKET", "EDNS", "EENVELOPE", "EMESSAGE", "ETLS",
+    ]);
+    const code = knownCodes.has(error?.code) ? error.code : "UNKNOWN";
+    console.error("Contact delivery failed.", {
+      code,
+      ...(code === "MAIL_CONFIG_MISSING" ? { missing: error.missing } : {}),
+    });
+    respond(response, 500, {
+      ok: false,
+      message: "Unable to send your message right now. Please try again or email me directly.",
+    });
   }
 }
